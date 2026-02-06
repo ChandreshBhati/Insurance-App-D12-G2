@@ -3,14 +3,9 @@ Orchestrate the deployment of a Insurance Rust application onto a Kubernetes clu
 
 -------
 
-insurance-app/
- ├ src/
- ├ Dockerfile
- ├ k8s/
- │   ├ deployment.yaml
- │   ├ service.yaml
- ├ .github/workflows/
- │   ├ ci-cd.yml
- ├ README.md
+📂 Expected Project Folder Structure
+
+<img width="395" height="274" alt="image" src="https://github.com/user-attachments/assets/a141aa32-16ff-4d9e-a0e7-87e587bff668" />
+
 
 
