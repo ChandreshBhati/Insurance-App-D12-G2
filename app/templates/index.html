@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Insurance App</title>
+</head>
+<body>
+    <h1>Insurance Management System</h1>
+
+    <h2>Add Policy</h2>
+    <form action="/add" method="POST">
+        Name: <input type="text" name="name"><br><br>
+        Type: <input type="text" name="type"><br><br>
+        Amount: <input type="number" name="amount"><br><br>
+        <button type="submit">Add Policy</button>
+    </form>
+
+    <h2>All Policies</h2>
+    <ul>
+        {% for p in policies %}
+            <li>{{ p.name }} | {{ p.type }} | ₹{{ p.amount }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
