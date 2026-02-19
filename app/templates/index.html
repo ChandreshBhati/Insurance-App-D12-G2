@@ -1,24 +1,202 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Insurance App</title>
-</head>
-<body>
-    <h1>Insurance Management System</h1>
+{% extends "base.html" %}
+{% block content %}
 
-    <h2>Add Policy</h2>
-    <form action="/add" method="POST">
-        Name: <input type="text" name="name"><br><br>
-        Type: <input type="text" name="type"><br><br>
-        Amount: <input type="number" name="amount"><br><br>
-        <button type="submit">Add Policy</button>
-    </form>
+<div class="container">
 
-    <h2>All Policies</h2>
-    <ul>
-        {% for p in policies %}
-            <li>{{ p.name }} | {{ p.type }} | ₹{{ p.amount }}</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+    <!-- ── HERO ── -->
+    <section class="hero">
+        <div class="hero-inner">
+
+            <!-- Left: text -->
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    Trusted by 10,000+ customers
+                </div>
+                <h1>Insurance Solutions<br><em>Built for You</em></h1>
+                <p>
+                    Secure your future with reliable insurance plans designed
+                    for individuals, families, and businesses — all in one place.
+                </p>
+                <div class="hero-actions">
+                    <a href="{{ url_for('main.add_policy') }}" class="primary-btn">
+                        <i class="fa fa-plus"></i> Add Policy
+                    </a>
+                    <a href="#policy-section" class="ghost-btn">View All Policies</a>
+                </div>
+            </div>
+
+            <!-- Right: stat cards floating -->
+            <div class="hero-visual">
+                <div class="hero-blob"></div>
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <span class="stat-num">1k+</span>
+                        <span class="stat-label">Active Policies</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-num">90%</span>
+                        <span class="stat-label">Claim Success</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-num">3</span>
+                        <span class="stat-label">Policy Types</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ── COVERAGE CARDS ── -->
+    <section class="policy-grid-section">
+        <div class="section-header">
+            <h2>Our Coverage Plans</h2>
+            <p>Choose the plan that best fits your life and budget</p>
+        </div>
+        <div class="policy-grid">
+
+            <div class="policy-card health-card">
+                <div class="card-icon">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+                <div class="card-tag">Most Popular</div>
+                <h3>Health Insurance</h3>
+                <p>Comprehensive medical coverage for you and your entire family, including cashless hospitalization.</p>
+                <ul class="card-features">
+                    <li><i class="fa fa-check"></i> Cashless Hospitalization</li>
+                    <li><i class="fa fa-check"></i> Pre &amp; Post Coverage</li>
+                    <li><i class="fa fa-check"></i> Family Floater Option</li>
+                </ul>
+                <a href="{{ url_for('main.health') }}" class="card-btn">
+                    Explore Plan <i class="fa fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="policy-card term-card">
+                <div class="card-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3>Term Insurance</h3>
+                <p>Life coverage for a fixed period with high sum assured at the most affordable premiums available.</p>
+                <ul class="card-features">
+                    <li><i class="fa fa-check"></i> Affordable Premiums</li>
+                    <li><i class="fa fa-check"></i> Tax Benefits</li>
+                    <li><i class="fa fa-check"></i> Financial Security</li>
+                </ul>
+                <a href="{{ url_for('main.term') }}" class="card-btn">
+                    Explore Plan <i class="fa fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="policy-card vehicle-card">
+                <div class="card-icon">
+                    <i class="fa-solid fa-car-side"></i>
+                </div>
+                <h3>Vehicle Insurance</h3>
+                <p>Complete protection for your cars and two-wheelers against damage, theft, and third-party liability.</p>
+                <ul class="card-features">
+                    <li><i class="fa fa-check"></i> Accidental Damage</li>
+                    <li><i class="fa fa-check"></i> Third-Party Liability</li>
+                    <li><i class="fa fa-check"></i> 24x7 Roadside Assist</li>
+                </ul>
+                <a href="{{ url_for('main.vehicle') }}" class="card-btn">
+                    Explore Plan <i class="fa fa-arrow-right"></i>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ── FLASH MESSAGES ── -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">
+                        <i class="fa {% if category == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- ── ALL POLICIES TABLE ── -->
+    <section class="policy-table-section" id="policy-section">
+
+        <div class="table-header">
+            <div>
+                <h2>All Policies</h2>
+                <p>Manage and track every active insurance policy</p>
+            </div>
+            <a href="{{ url_for('main.add_policy') }}" class="primary-btn">
+                <i class="fa fa-plus"></i> Add Policy
+            </a>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="policy-table">
+                <thead>
+                    <tr>
+                        <th><i class="fa fa-tag"></i> Type</th>
+                        <th><i class="fa fa-user"></i> Customer Name</th>
+                        <th><i class="fa fa-envelope"></i> Email</th>
+                        <th><i class="fa fa-indian-rupee-sign"></i> Premium</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if policies %}
+                    {% for policy in policies %}
+                    <tr class="table-row fade-in">
+                        <td>
+                            <span class="type-badge">
+                                {% if 'health' in policy.policy_type | lower %}
+                                    <i class="fa-solid fa-heart-pulse"></i>
+                                {% elif 'term' in policy.policy_type | lower %}
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-car-side"></i>
+                                {% endif %}
+                                {{ policy.policy_type }}
+                            </span>
+                        </td>
+                        <td><strong style="color:var(--navy)">{{ policy.customer_name }}</strong></td>
+                        <td><span class="email-text">{{ policy.email }}</span></td>
+                        <td><span class="premium-amount">&#8377; {{ "%.2f"|format(policy.premium_amount) }}</span></td>
+                        <td class="actions">
+                            <a href="{{ url_for('main.edit_policy', id=policy.id) }}" class="edit-btn">
+                                <i class="fa fa-pen"></i> Edit
+                            </a>
+                            <form action="{{ url_for('main.delete_policy', id=policy.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="delete-btn"
+                                    onclick="return confirm('Delete this policy?');">
+                                    <i class="fa fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="empty-row">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-folder-open"></i>
+                                <p>No policies added yet.</p>
+                                <a href="{{ url_for('main.add_policy') }}" class="primary-btn">
+                                    Add your first policy
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}
