@@ -10,3 +10,10 @@ New UI design update and implementation of CRUD operation..
 
 
 <img width="1900" height="885" alt="Screenshot 2026-02-19 101022" src="https://github.com/user-attachments/assets/0e75831b-3df4-4a61-9839-294ba3f29559" />
+
+--------------------
+
+- Added changes and conditions for each insurance policy.
+- Commonly offered benefits across all platforms specified comprehensively.
+- Included smart tips before buying.
+- Comparing Top providers at a glance.
