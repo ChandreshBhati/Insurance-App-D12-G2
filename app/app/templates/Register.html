@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="auth-page">
+    <div class="auth-card">
+
+        <!-- Decorative blob -->
+        <div class="auth-blob register-blob"></div>
+
+        <!-- Header -->
+        <div class="auth-header">
+            <div class="auth-icon-wrap register-icon">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <h1 class="auth-title">Create Account</h1>
+            <p class="auth-sub">Join Insurance Hub to manage your policies securely</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}" style="margin-bottom:1.2rem;">
+                        <i class="fa {% if category == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Register Form -->
+        <form method="POST" action="{{ url_for('auth.register') }}" novalidate>
+
+            <div class="form-group">
+                <label><i class="fa fa-user"></i> Username</label>
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Choose a username"
+                    required
+                    autocomplete="username"
+                    minlength="3"
+                >
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa fa-envelope"></i> Email Address</label>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    required
+                    autocomplete="email"
+                >
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fa fa-key"></i> Password</label>
+                    <div class="input-icon-wrap">
+                        <input
+                            type="password"
+                            name="password"
+                            id="reg-password"
+                            placeholder="Min. 6 characters"
+                            required
+                            minlength="6"
+                            autocomplete="new-password"
+                        >
+                        <button type="button" class="toggle-pw" onclick="togglePassword('reg-password', this)" tabindex="-1">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fa fa-lock"></i> Confirm Password</label>
+                    <div class="input-icon-wrap">
+                        <input
+                            type="password"
+                            name="confirm_password"
+                            id="reg-confirm"
+                            placeholder="Repeat password"
+                            required
+                            autocomplete="new-password"
+                        >
+                        <button type="button" class="toggle-pw" onclick="togglePassword('reg-confirm', this)" tabindex="-1">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password strength indicator -->
+            <div class="pw-strength-wrap" id="pw-strength-wrap" style="display:none;">
+                <div class="pw-strength-bar">
+                    <div class="pw-strength-fill" id="pw-strength-fill"></div>
+                </div>
+                <span class="pw-strength-label" id="pw-strength-label"></span>
+            </div>
+
+            <button type="submit" class="primary-btn auth-submit-btn">
+                <i class="fa fa-user-plus"></i> Create Account
+            </button>
+
+        </form>
+
+        <!-- Divider -->
+        <div class="auth-divider">
+            <span>Already have an account?</span>
+        </div>
+
+        <a href="{{ url_for('auth.login') }}" class="ghost-btn auth-switch-btn">
+            <i class="fa fa-arrow-right-to-bracket"></i> Sign In Instead
+        </a>
+
+    </div>
+</div>
+
+<script>
+function togglePassword(fieldId, btn) {
+    const input = document.getElementById(fieldId);
+    const icon  = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+
+// Password strength meter
+const pwInput = document.getElementById('reg-password');
+const wrap    = document.getElementById('pw-strength-wrap');
+const fill    = document.getElementById('pw-strength-fill');
+const label   = document.getElementById('pw-strength-label');
+
+pwInput.addEventListener('input', function() {
+    const val = this.value;
+    wrap.style.display = val.length > 0 ? 'flex' : 'none';
+
+    let strength = 0;
+    if (val.length >= 6)                        strength++;
+    if (val.length >= 10)                       strength++;
+    if (/[A-Z]/.test(val))                      strength++;
+    if (/[0-9]/.test(val))                      strength++;
+    if (/[^A-Za-z0-9]/.test(val))              strength++;
+
+    const levels = [
+        { pct: '20%',  color: '#e53e3e', text: 'Very Weak' },
+        { pct: '40%',  color: '#dd6b20', text: 'Weak' },
+        { pct: '60%',  color: '#d69e2e', text: 'Fair' },
+        { pct: '80%',  color: '#38a169', text: 'Strong' },
+        { pct: '100%', color: '#2f855a', text: 'Very Strong' },
+    ];
+
+    const lvl = levels[Math.min(strength - 1, 4)] || levels[0];
+    fill.style.width      = lvl.pct;
+    fill.style.background = lvl.color;
+    label.textContent     = lvl.text;
+    label.style.color     = lvl.color;
+});
+</script>
+
+{% endblock %}
