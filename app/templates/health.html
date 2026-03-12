@@ -1,13 +1,220 @@
 {% extends "base.html" %}
-
 {% block content %}
+
 <div class="policy-page">
-    <h1>Health Insurance Policy</h1>
-    <p>Covers hospitalization, surgeries, and medical expenses.</p>
-    <ul>
-        <li>Cashless hospitalization</li>
-        <li>Pre & Post hospitalization coverage</li>
-        <li>Family floater option</li>
-    </ul>
+
+    <!-- ── PAGE HERO ── -->
+    <div class="policy-hero health-hero">
+        <div class="policy-hero-inner">
+            <div class="policy-hero-icon">
+                <i class="fa-solid fa-heart-pulse"></i>
+            </div>
+            <div>
+                <div class="policy-tag">Most Popular</div>
+                <h1>Health Insurance Policy</h1>
+                <p>Covers hospitalization, surgeries, and medical expenses for you and your family.</p>
+            </div>
+        </div>
+        <div class="policy-hero-blob"></div>
+    </div>
+
+    <!-- ── QUICK FEATURES ── -->
+    <div class="features-strip">
+        <div class="feature-pill">
+            <i class="fa-solid fa-hospital"></i> Cashless Hospitalization
+        </div>
+        <div class="feature-pill">
+            <i class="fa-solid fa-notes-medical"></i> Pre &amp; Post Coverage
+        </div>
+        <div class="feature-pill">
+            <i class="fa-solid fa-people-roof"></i> Family Floater Option
+        </div>
+        <div class="feature-pill">
+            <i class="fa-solid fa-stethoscope"></i> Day Care Procedures
+        </div>
+    </div>
+
+    <!-- ── INFO CARDS GRID ── -->
+    <div class="info-grid">
+
+        <!-- CARD 1: Terms & Conditions -->
+        <div class="info-card terms-card">
+            <div class="info-card-header">
+                <div class="info-card-icon tc-icon">
+                    <i class="fa-solid fa-file-contract"></i>
+                </div>
+                <div>
+                    <div class="info-card-label">Standard Across Platforms</div>
+                    <h3>Terms &amp; Conditions</h3>
+                </div>
+            </div>
+            <ul class="info-list">
+                <li>
+                    <span class="info-bullet tc-bullet">01</span>
+                    <div>
+                        <strong>Waiting Period</strong>
+                        <p>Most policies have a 30-day initial waiting period. Pre-existing diseases (PEDs) typically have a 2–4 year waiting period before coverage kicks in.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="info-bullet tc-bullet">02</span>
+                    <div>
+                        <strong>Co-Payment Clause</strong>
+                        <p>Some plans require you to pay 10–20% of the claim amount yourself. Co-pay is higher for senior citizens or treatment in non-network hospitals.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="info-bullet tc-bullet">03</span>
+                    <div>
+                        <strong>Sub-Limits &amp; Room Rent Cap</strong>
+                        <p>Many policies cap room rent at 1–2% of sum insured per day. Exceeding this limit reduces the total reimbursement proportionately.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="info-bullet tc-bullet">04</span>
+                    <div>
+                        <strong>Exclusions</strong>
+                        <p>Cosmetic treatments, self-inflicted injuries, dental procedures, vision correction, and experimental treatments are typically excluded.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="info-bullet tc-bullet">05</span>
+                    <div>
+                        <strong>Claim Intimation Window</strong>
+                        <p>For planned hospitalization, intimation must be given 48–72 hours in advance. Emergency claims must be reported within 24 hours of admission.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- CARD 2: Key Benefits -->
+        <div class="info-card benefits-card">
+            <div class="info-card-header">
+                <div class="info-card-icon ben-icon">
+                    <i class="fa-solid fa-shield-heart"></i>
+                </div>
+                <div>
+                    <div class="info-card-label">Commonly Offered Benefits</div>
+                    <h3>What You Get</h3>
+                </div>
+            </div>
+            <ul class="info-list">
+                <li>
+                    <span class="info-bullet ben-bullet"><i class="fa fa-check"></i></span>
+                    <div>
+                        <strong>No Claim Bonus (NCB)</strong>
+                        <p>Earn 5–50% bonus on your sum insured for every claim-free year, boosting your coverage without extra premium.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="info-bullet ben-bullet"><i class="fa fa-check"></i></span>
+                    <div>
+                        <strong>Network Hospital Cashless</strong>
+                        <p>Access to 5,000–15,000+ network hospitals for zero out-of-pocket cashless treatment — no upfront payment needed.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="info-bullet ben-bullet"><i class="fa fa-check"></i></span>
+                    <div>
+                        <strong>Ambulance Cover</strong>
+                        <p>Emergency ambulance charges up to ₹2,000–₹5,000 per hospitalization covered under most standard plans.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="info-bullet ben-bullet"><i class="fa fa-check"></i></span>
+                    <div>
+                        <strong>Annual Health Checkup</strong>
+                        <p>Free preventive health checkup once per policy year for all insured members — promotes early detection.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="info-bullet ben-bullet"><i class="fa fa-check"></i></span>
+                    <div>
+                        <strong>Tax Benefit (Sec 80D)</strong>
+                        <p>Premium paid qualifies for deduction up to ₹25,000 (₹50,000 for senior citizens) under Section 80D of the Income Tax Act.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- CARD 3: Smart Tips -->
+        <div class="info-card tips-card">
+            <div class="info-card-header">
+                <div class="info-card-icon tip-icon">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <div>
+                    <div class="info-card-label">Before You Buy</div>
+                    <h3>Smart Tips</h3>
+                </div>
+            </div>
+            <div class="tips-list">
+                <div class="tip-item">
+                    <div class="tip-num">💡</div>
+                    <p>Always choose <strong>sum insured ≥ ₹5 lakh</strong> given rising medical costs in metro cities.</p>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-num">💡</div>
+                    <p>Opt for plans with <strong>restore benefit</strong> — replenishes your sum insured if exhausted mid-year.</p>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-num">💡</div>
+                    <p>Check the insurer's <strong>Claim Settlement Ratio (CSR)</strong> — aim for 95%+ for reliable payouts.</p>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-num">💡</div>
+                    <p>Buy health insurance <strong>before age 35</strong> to avoid high premiums and PED waiting periods.</p>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-num">💡</div>
+                    <p>Consider a <strong>top-up or super top-up plan</strong> for enhanced coverage at a much lower cost.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 4: Quick Compare -->
+        <div class="info-card compare-card">
+            <div class="info-card-header">
+                <div class="info-card-icon cmp-icon">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <div>
+                    <div class="info-card-label">Market Overview</div>
+                    <h3>Top Providers at a Glance</h3>
+                </div>
+            </div>
+            <div class="compare-table-wrap">
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Insurer</th>
+                            <th>Entry Age</th>
+                            <th>CSR</th>
+                            <th>Network</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Star Health</td><td>Up to 65 yrs</td><td>99.1%</td><td>14,000+</td></tr>
+                        <tr><td>Niva Bupa</td><td>Up to 65 yrs</td><td>91.6%</td><td>10,000+</td></tr>
+                        <tr><td>HDFC Ergo</td><td>Up to 65 yrs</td><td>98.0%</td><td>13,000+</td></tr>
+                        <tr><td>Care Health</td><td>Up to 99 yrs</td><td>95.2%</td><td>19,000+</td></tr>
+                        <tr><td>Aditya Birla</td><td>Up to 65 yrs</td><td>96.5%</td><td>11,000+</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="compare-note">* CSR = Claim Settlement Ratio. Data indicative; verify with insurer.</p>
+        </div>
+
+    </div><!-- /info-grid -->
+
+    <div class="policy-page-cta">
+        <a href="{{ url_for('main.add_policy') }}" class="primary-btn">
+            <i class="fa fa-plus"></i> Add a Health Policy
+        </a>
+        <a href="{{ url_for('main.home') }}" class="ghost-btn">
+            <i class="fa fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
 </div>
 {% endblock %}
