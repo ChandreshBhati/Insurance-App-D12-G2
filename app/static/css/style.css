@@ -1347,3 +1347,393 @@ footer {
     .feature-pill { font-size: 0.78rem; padding: 0.4rem 0.85rem; }
 }
 
+
+/* ============================================================
+   AUTHENTICATION — Login, Register, Navbar User Dropdown
+   ============================================================ */
+
+/* ── Auth Page Layout ── */
+.auth-page {
+    min-height: calc(100vh - 70px - 64px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    background: var(--bg);
+}
+
+/* ── Auth Card ── */
+.auth-card {
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 3rem 2.8rem;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decorative blob inside card */
+.auth-blob {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    background: var(--bg-sage);
+    border-radius: 60% 40% 55% 45% / 45% 55% 40% 60%;
+    top: -80px;
+    right: -80px;
+    opacity: 0.45;
+    pointer-events: none;
+    animation: morph 9s ease-in-out infinite;
+}
+
+.register-blob {
+    background: #dce8f7;
+    opacity: 0.5;
+}
+
+/* ── Auth Header ── */
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.auth-icon-wrap {
+    width: 62px;
+    height: 62px;
+    border-radius: 18px;
+    background: var(--bg-sage-lt);
+    color: var(--sage-dk);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin: 0 auto 1.1rem;
+    box-shadow: 0 4px 16px rgba(106,170,120,0.2);
+}
+
+.register-icon {
+    background: #dce8f7;
+    color: var(--navy);
+    box-shadow: 0 4px 16px rgba(27,42,74,0.12);
+}
+
+.auth-title {
+    font-family: var(--font-head);
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 0.35rem;
+}
+
+.auth-sub {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+}
+
+/* ── Password Toggle ── */
+.input-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon-wrap input {
+    padding-right: 3rem !important;
+}
+
+.toggle-pw {
+    position: absolute;
+    right: 0.9rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding: 0.25rem;
+    transition: color 0.2s;
+    z-index: 2;
+}
+
+.toggle-pw:hover { color: var(--navy); }
+
+/* ── Remember Me / Auth Options ── */
+.auth-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.4rem;
+    font-size: 0.87rem;
+}
+
+.remember-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-body);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.remember-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--sage-dk);
+    cursor: pointer;
+}
+
+/* ── Auth Submit Button ── */
+.auth-submit-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.85rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    margin-bottom: 0;
+}
+
+/* ── Divider ── */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0 1rem;
+    color: var(--text-muted);
+    font-size: 0.83rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* ── Switch Button ── */
+.auth-switch-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+}
+
+/* ── Password Strength Meter ── */
+.pw-strength-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: -0.6rem;
+    margin-bottom: 1rem;
+}
+
+.pw-strength-bar {
+    flex: 1;
+    height: 5px;
+    background: var(--border);
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.pw-strength-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 100px;
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+.pw-strength-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+    min-width: 70px;
+    text-align: right;
+}
+
+/* ── Flash warning variant ── */
+.flash-warning {
+    background: #fffbeb;
+    border: 1px solid #f6d860;
+    color: #92700a;
+}
+
+/* ============================================================
+   NAVBAR — User Avatar Dropdown
+   ============================================================ */
+
+.nav-login-btn {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-body);
+    text-decoration: none;
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-xs);
+    transition: all 0.2s ease;
+}
+
+.nav-login-btn:hover {
+    color: var(--navy);
+    background: var(--bg-sage-lt);
+}
+
+/* User dropdown trigger */
+.nav-user-dropdown {
+    position: relative;
+}
+
+.nav-user-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    background: var(--bg-sage-lt);
+    border: 1.5px solid var(--sage-lt);
+    border-radius: 100px;
+    padding: 0.3rem 0.85rem 0.3rem 0.3rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+}
+
+.nav-user-btn:hover {
+    border-color: var(--sage-dk);
+    background: var(--bg-sage);
+}
+
+.nav-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--sage-dk);
+    color: #fff;
+    font-family: var(--font-head);
+    font-size: 0.85rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.nav-username {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--navy);
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.nav-chevron {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    transition: transform 0.25s ease;
+}
+
+.nav-user-btn:has(+ .dropdown-menu.open) .nav-chevron {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    min-width: 230px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all 0.22s ease;
+    z-index: 999;
+    overflow: hidden;
+}
+
+.dropdown-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1rem 1.2rem;
+    background: var(--bg);
+}
+
+.dropdown-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--sage-dk);
+    color: #fff;
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dropdown-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--navy);
+}
+
+.dropdown-email {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    word-break: break-all;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: var(--border);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.85rem 1.2rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-body);
+    text-decoration: none;
+    transition: all 0.18s ease;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    font-family: var(--font-body);
+}
+
+.dropdown-item:hover {
+    background: var(--bg-sage-lt);
+    color: var(--navy);
+}
+
+.logout-item { color: #c62828; }
+.logout-item:hover {
+    background: #fef0ee;
+    color: #c62828;
+}
+
+/* ── Responsive Auth ── */
+@media (max-width: 520px) {
+    .auth-card  { padding: 2rem 1.5rem; }
+    .auth-title { font-size: 1.6rem; }
+    .nav-username { display: none; }
+}
+
