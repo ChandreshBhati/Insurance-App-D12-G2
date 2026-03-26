@@ -3,5 +3,7 @@ flask-sqlalchemy
 flask-login
 werkzeug
 gunicorn
-openai
 python-dotenv
+groq
+huggingface_hub
+Pillow

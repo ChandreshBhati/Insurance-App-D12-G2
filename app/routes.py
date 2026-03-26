@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from .models import Policy
 from . import db
@@ -108,52 +108,95 @@ def delete_policy(id):
     return redirect(url_for("main.home"))
 
 
-# ── AI STUDIO ─────────────────────────────────────────────────
+# ── AI STUDIO PAGE ────────────────────────────────────────────
 @main.route("/ai-studio", methods=["GET", "POST"])
 @login_required
 def ai_studio():
     explanation = None
-    image_url   = None
     error       = None
-    active_tab  = "explain"   # which tab to show after POST
+    active_tab  = "explain"
 
     if request.method == "POST":
         action      = request.form.get("action")
         policy_type = request.form.get("policy_type", "Health Insurance")
         user_prompt = request.form.get("prompt", "").strip()
-        active_tab  = action  # keep the right tab open after submit
+        active_tab  = action
 
         if not user_prompt:
             error = "Please enter a prompt before submitting."
-        else:
+        elif action == "explain":
             try:
-                # Import here to avoid circular imports
-                from .ai import generate_policy_explanation, generate_risk_infographic
-
-                if action == "explain":
-                    explanation = generate_policy_explanation(
-                        user_prompt, policy_type
-                    )
-
-                elif action == "visualize":
-                    image_url = generate_risk_infographic(
-                        policy_type, user_prompt
-                    )
-
+                from .ai import generate_policy_explanation
+                explanation = generate_policy_explanation(
+                    user_prompt, policy_type
+                )
             except Exception as e:
-                # Catch API errors gracefully
                 err_str = str(e)
-                if "api_key" in err_str.lower() or "authentication" in err_str.lower():
-                    error = "Invalid or missing OpenAI API key. Please check your .env file."
-                elif "quota" in err_str.lower() or "billing" in err_str.lower():
-                    error = "OpenAI quota exceeded. Please check your billing at platform.openai.com."
+                if "authentication" in err_str.lower():
+                    error = "Invalid GROQ_API_KEY. Please check your .env file."
                 elif "rate" in err_str.lower():
                     error = "Too many requests. Please wait a moment and try again."
                 else:
-                    error = f"AI service error: {err_str}"
+                    error = f"AI error: {err_str}"
 
     return render_template("ai_studio.html",
                            explanation=explanation,
-                           image_url=image_url,
                            error=error,
                            active_tab=active_tab)
+
+
+# ── API: ASYNC IMAGE GENERATION ───────────────────────────────
+# Called by JavaScript fetch() — returns JSON, no page reload
+@main.route("/api/generate-image", methods=["POST"])
+@login_required
+def generate_image_api():
+    """
+    Async endpoint for image generation.
+    JS calls this in background → page never freezes.
+    Returns: { success: true, image_url: "data:image/jpeg;base64,..." }
+         or: { success: false, error: "..." }
+    """
+    try:
+        data        = request.get_json()
+        policy_type = data.get("policy_type", "Health Insurance")
+        concept     = data.get("prompt", "").strip()
+
+        if not concept:
+            return jsonify({"success": False, "error": "Prompt is empty."})
+
+        from .ai import generate_risk_infographic
+        image_url = generate_risk_infographic(policy_type, concept)
+
+        return jsonify({"success": True, "image_url": image_url})
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+# ── API: ASYNC TEXT EXPLANATION ───────────────────────────────
+# Called by JS fetch() from new chat UI — returns JSON
+@main.route("/api/explain", methods=["POST"])
+@login_required
+def explain_api():
+    """
+    Async endpoint for policy explanation.
+    JS calls this → returns JSON → no page reload.
+    Returns: { success: true, explanation: "..." }
+         or: { success: false, error: "..." }
+    """
+    try:
+        data        = request.get_json()
+        user_prompt = data.get("prompt", "").strip()
+        policy_type = data.get("policy_type", "General Insurance")
+
+        if not user_prompt:
+            return jsonify({"success": False, "error": "Prompt is empty."})
+
+        from .ai import generate_policy_explanation
+        explanation = generate_policy_explanation(user_prompt, policy_type)
+
+        return jsonify({"success": True, "explanation": explanation})
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+    

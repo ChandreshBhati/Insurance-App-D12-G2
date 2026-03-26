@@ -1,5 +1,6 @@
 import os
 import base64
+import io
 import requests
 from groq import Groq
 
@@ -16,13 +17,9 @@ You explain {policy_type} clearly and concisely for customers.
 Always structure your response exactly like this:
 
 📋 OVERVIEW
-[4-5 sentence simple explanation]
+[6-10 lines detailed sentence simple explanation]
 
-✅ KEY BENEFITS
-- Benefit 1
-- Benefit 2
-- Benefit 3
-- Benefit 4
+
 
 ⚠️ IMPORTANT TO KNOW
 [One critical thing the customer must be aware of pertaining to indian market]
@@ -48,83 +45,118 @@ Do not use markdown bold — use plain text only.
 # ── FUNCTION 2: Image Generation ──────────────────────────────
 def generate_risk_infographic(policy_type: str, concept: str) -> str:
     """
-    Tries multiple free Hugging Face models in order.
-    Returns a base64 data URL — embeds directly in <img src="...">.
-    No external URL issues, no browser blocks, no expiry.
+    Priority:
+    1. Gemini 3.1 Flash Image  — 500 free/day (fresh key needed if quota hit)
+    2. FLUX.1-dev via HF       — provider=auto (HF picks fastest free provider)
+    3. FLUX.1-schnell via HF   — faster fallback
+    4. Together AI + FLUX      — uses your TOGETHER_API_KEY
 
-    Models tried (in order):
-    1. FLUX.1-schnell  — fastest, no token needed
-    2. FLUX.1-dev      — better quality, needs HF_TOKEN
-    3. stable-diffusion-2 — fallback, always available
+    Returns base64 data URL for direct <img> embedding.
     """
-
     prompt = (
-        f"Professional insurance infographic about {policy_type}, "
-        f"concept: {concept}, flat design, teal navy white color scheme, "
-        f"clean icons, modern layout, no watermark, high quality"
+        f"Professional insurance visual diagram about {policy_type}, "
+        f"topic: {concept}, "
+        f"MINIMAL TEXT, icon-driven design, symbols and shapes only, "
+        f"flat design, teal and navy blue color palette, "
+        f"simple short 1-2 word labels only, large clear icons, "
+        f"flowchart arrows, pie chart, bar graph, "
+        f"shield heart car medical cross icons, "
+        f"white background, no watermark, no paragraphs, "
+        f"high quality clean professional infographic"
     )
 
-    hf_token = os.environ.get("HF_TOKEN", "")
-    headers  = {"Content-Type": "application/json"}
+    gemini_key  = os.environ.get("GEMINI_API_KEY", "")
+    hf_token    = os.environ.get("HF_TOKEN", "")
+    together_key = os.environ.get("TOGETHER_API_KEY", "")
+
+    # ── Method 1: Gemini 3.1 Flash Image ──────────────────────
+    if gemini_key:
+        for model in ["gemini-3.1-flash-image-preview", "gemini-2.5-flash-image"]:
+            try:
+                print(f"[Image] Trying Gemini {model}...")
+                url = (
+                    f"https://generativelanguage.googleapis.com"
+                    f"/v1beta/models/{model}:generateContent"
+                    f"?key={gemini_key}"
+                )
+                payload = {
+                    "contents": [{"parts": [{"text": prompt}]}],
+                    "generationConfig": {
+                        "responseModalities": ["TEXT", "IMAGE"]
+                    }
+                }
+                resp = requests.post(url, json=payload,
+                                     headers={"Content-Type": "application/json"},
+                                     timeout=45)
+                if resp.status_code == 200:
+                    parts = resp.json()["candidates"][0]["content"]["parts"]
+                    for part in parts:
+                        if "inlineData" in part:
+                            img_b64 = part["inlineData"]["data"]
+                            mime    = part["inlineData"].get("mimeType", "image/png")
+                            print(f"[Image] Gemini {model} success!")
+                            return f"data:{mime};base64,{img_b64}"
+                    print(f"[Gemini {model}] No image in response")
+                elif resp.status_code == 429:
+                    print(f"[Gemini {model}] Quota exceeded")
+                    continue
+                elif resp.status_code == 404:
+                    print(f"[Gemini {model}] Not found — trying next")
+                    continue
+                else:
+                    print(f"[Gemini {model}] HTTP {resp.status_code}")
+                    continue
+            except Exception as e:
+                print(f"[Gemini {model}] Error: {e}")
+                continue
+
+    # ── Method 2: FLUX.1-dev via HF (provider=auto) ───────────
+    # provider="auto" → HF picks fastest available free provider
+    # Confirmed providers for FLUX: wavespeed, fal-ai, together
     if hf_token:
-        headers["Authorization"] = f"Bearer {hf_token}"
+        from huggingface_hub import InferenceClient
 
-    # ── Models to try in order ────────────────────────────────
-    models = [
-        "black-forest-labs/FLUX.1-schnell",   # fastest, no token needed
-        "black-forest-labs/FLUX.1-dev",        # better quality, needs token
-        "stabilityai/stable-diffusion-2",      # reliable fallback
-    ]
+        flux_attempts = [
+            # (model, provider, api_key)
+            ("black-forest-labs/FLUX.1-dev",     "auto",      hf_token),
+            ("black-forest-labs/FLUX.1-schnell", "auto",      hf_token),
+            ("black-forest-labs/FLUX.1-dev",     "together",  together_key or hf_token),
+            ("black-forest-labs/FLUX.1-schnell", "together",  together_key or hf_token),
+        ]
 
-    last_error = None
+        for model, provider, api_key in flux_attempts:
+            if not api_key:
+                continue
+            try:
+                print(f"[Image] Trying HF {model} provider={provider}...")
 
-    for model in models:
-        url = f"https://api-inference.huggingface.co/models/{model}"
-        try:
-            response = requests.post(
-                url,
-                headers=headers,
-                json={"inputs": prompt},
-                timeout=90
-            )
+                hf_client = InferenceClient(
+                    provider=provider,
+                    api_key=api_key
+                )
 
-            if response.status_code == 200:
-                # Convert raw bytes → base64 data URL
-                img_b64 = base64.b64encode(response.content).decode("utf-8")
+                image = hf_client.text_to_image(
+                    prompt=prompt,
+                    model=model
+                )
+
+                buffer = io.BytesIO()
+                image.save(buffer, format="JPEG", quality=90)
+                buffer.seek(0)
+                img_b64 = base64.b64encode(buffer.read()).decode("utf-8")
+                print(f"[Image] HF {model} ({provider}) success!")
                 return f"data:image/jpeg;base64,{img_b64}"
 
-            elif response.status_code == 503:
-                # Model loading — skip to next
-                last_error = f"{model} is loading (503). Tried next model."
+            except Exception as e:
+                print(f"[HF {model} {provider}] Error: {e}")
                 continue
 
-            elif response.status_code == 401:
-                # Token needed — skip to next
-                last_error = f"{model} requires HF token (401). Tried next model."
-                continue
-
-            elif response.status_code == 410:
-                # Model removed — skip to next
-                last_error = f"{model} no longer available (410). Tried next model."
-                continue
-
-            else:
-                last_error = f"{model} returned HTTP {response.status_code}."
-                continue
-
-        except requests.exceptions.Timeout:
-            last_error = f"{model} timed out. Tried next model."
-            continue
-
-        except Exception as e:
-            last_error = str(e)
-            continue
-
-    # All models failed
     raise Exception(
-        f"All image models failed. Last error: {last_error}. "
-        "Add HF_TOKEN to your .env for better access. "
-        "Get a free token at: https://huggingface.co/settings/tokens"
+        "Image generation failed. Please:\n"
+        "1. Create a NEW Gemini key at https://aistudio.google.com/apikey\n"
+        "   (each new key = fresh 500 free images/day)\n"
+        "2. Make sure HF_TOKEN is in your .env\n"
+        "3. If on college WiFi — switch to mobile hotspot"
     )
 
 
