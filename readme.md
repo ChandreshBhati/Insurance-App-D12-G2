@@ -9,7 +9,6 @@ Implement a multimodal GenAI application for Insurance concept visualization. Th
 ![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python)
 ![Flask](https://img.shields.io/badge/Flask-3.0-green?style=for-the-badge&logo=flask)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker)
-![Kubernetes](https://img.shields.io/badge/Kubernetes-kubeadm-326CE5?style=for-the-badge&logo=kubernetes)
 ![AWS](https://img.shields.io/badge/AWS-EC2-FF9900?style=for-the-badge&logo=amazonaws)
 ![Groq](https://img.shields.io/badge/LLM-Groq_Llama_3.3-orange?style=for-the-badge)
 ![Gemini](https://img.shields.io/badge/Image-Gemini_Flash-4285F4?style=for-the-badge&logo=google)
