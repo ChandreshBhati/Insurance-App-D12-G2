@@ -1,3 +1,7 @@
+# Problem Statement
+
+Implement a multimodal GenAI application for Insurance concept visualization. This system integrates LLMs with Image Generation models (via API) to translate textual prompts into both descriptive narratives and high-fidelity visual representations (e.g., Risk Infographic). This workflow demonstrates the synergy between text-to-text and text-to-image models to create comprehensive, multi-dimensional content for educational and professional presentations.
+
 # 🛡️ Insurance Hub — Multimodal GenAI Insurance Management Platform
 
 <div align="center">
