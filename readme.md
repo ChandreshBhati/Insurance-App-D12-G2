@@ -312,11 +312,9 @@ google-generativeai   # Gemini image generation
 
 ---
 
-## 🏆 Key Technical features and Future scope 
+## Future scope 
 
-Multimodal AI Integration — Seamlessly combined two different AI modalities (text generation + image generation) within a single Flask application, with graceful multi-provider fallback ensuring maximum uptime. and Infographic-generation for generating images on Prompt.GrokAPI keys for free LLM textual generation and chatbot inferencing
-Zero-Dependency Frontend — Entire UI built with vanilla CSS and JavaScript — no React, no Bootstrap, no jQuery — demonstrating deep understanding of web fundamentals. User-Scoped Data Architecture Complete multi-user system where every database query is filtered by `user_id` and every mutation validates ownership — production-level data isolation.
-**Target** :- Design and implement an architecture of collaborative Insurance agents featuring specialization and hand-off protocols. The system consists of a Researcher Agent dedicated to sourcing information (e.g., Policy Coverage) and a Writer Agent tasked with synthesizing and formatting the data. This project demonstrates advanced inter-agent communication, state management, and the orchestration of complex workflows to achieve high-quality, structured outputs.
+**Target** :- Design and implement an architecture of collaborative Insurance agents featuring specialization and hand-off protocols. The system consists of a Researcher Agent dedicated to sourcing information (e.g., Policy Coverage) and a Writer Agent tasked with synthesizing and formatting the data. This project demonstrates advanced inter-agent communication, state management, and the orchestration of complex workflows to achieve high-quality, structured outputs. RAG based integration for more precise outputs catering to indian customers and market.
 
 ---
 
