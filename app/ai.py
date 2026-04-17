@@ -17,9 +17,7 @@ You explain {policy_type} clearly and concisely for customers.
 Always structure your response exactly like this:
 
 📋 OVERVIEW
-[6-10 lines detailed sentence simple explanation]
-
-
+[10-15 lines detailed sentence simple explanation]
 
 ⚠️ IMPORTANT TO KNOW
 [One critical thing the customer must be aware of pertaining to indian market]

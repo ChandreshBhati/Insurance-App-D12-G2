@@ -7,3 +7,9 @@ python-dotenv
 groq
 huggingface_hub
 Pillow
+requests
+google-generativeai
+
+# ── Multi-Agent RAG Dependencies ──
+chromadb
+sentence-transformers

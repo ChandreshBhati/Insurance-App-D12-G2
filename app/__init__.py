@@ -43,3 +43,16 @@ def create_app():
         db.create_all()
 
     return app
+
+
+# ── ADD THESE 3 LINES to create_app() in __init__.py ──────────
+# Place them AFTER db.create_all() and BEFORE return app
+
+    # ── Initialize RAG Knowledge Base ─────────────────────────
+    # Pre-loads ChromaDB with Indian insurance knowledge on startup
+    with app.app_context():
+        try:
+            from .agents.knowledge_base import initialize_knowledge_base
+            initialize_knowledge_base()
+        except Exception as e:
+            print(f"[Startup] RAG init skipped: {e}")

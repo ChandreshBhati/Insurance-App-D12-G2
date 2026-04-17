@@ -1,0 +1,911 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="studio-wrap">
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- LEFT SIDEBAR                                           -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <aside class="studio-sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-icon" style="background:linear-gradient(135deg,#3b4fd8,var(--navy));">
+                <i class="fa-solid fa-robot"></i>
+            </div>
+            <div>
+                <div class="sidebar-title">AI Agents</div>
+                <div class="sidebar-sub">RAG · Research · Write</div>
+            </div>
+        </div>
+
+        <!-- Pipeline info -->
+        <div class="sidebar-section-label">PIPELINE</div>
+        <div class="pipeline-steps">
+            <div class="pipeline-step" id="ps-researcher">
+                <div class="ps-dot"></div>
+                <div class="ps-info">
+                    <div class="ps-name"><i class="fa-solid fa-magnifying-glass"></i> Researcher Agent</div>
+                    <div class="ps-desc">Queries RAG knowledge base</div>
+                </div>
+            </div>
+            <div class="pipeline-arrow"><i class="fa fa-arrow-down"></i></div>
+            <div class="pipeline-step" id="ps-handoff">
+                <div class="ps-dot"></div>
+                <div class="ps-info">
+                    <div class="ps-name"><i class="fa-solid fa-right-left"></i> Handoff Gate</div>
+                    <div class="ps-desc">Validates research packet</div>
+                </div>
+            </div>
+            <div class="pipeline-arrow"><i class="fa fa-arrow-down"></i></div>
+            <div class="pipeline-step" id="ps-writer">
+                <div class="ps-dot"></div>
+                <div class="ps-info">
+                    <div class="ps-name"><i class="fa-solid fa-pen-nib"></i> Writer Agent</div>
+                    <div class="ps-desc">Synthesizes final response</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Policy type filter -->
+        <div class="sidebar-section-label">POLICY FILTER</div>
+        <select class="sidebar-select" id="agent-policy-select">
+            <option value="">Auto-detect</option>
+            <option value="Health Insurance">Health Insurance</option>
+            <option value="Term Insurance">Term Insurance</option>
+            <option value="Vehicle Insurance">Vehicle Insurance</option>
+        </select>
+
+        <!-- Quick prompts -->
+        <div class="sidebar-section-label">QUICK PROMPTS</div>
+        <div class="sidebar-suggestions">
+            <div class="suggestion-chip" onclick="useSuggestion(this)">Best health plan for a family of 4?</div>
+            <div class="suggestion-chip" onclick="useSuggestion(this)">Which term insurance has best CSR?</div>
+            <div class="suggestion-chip" onclick="useSuggestion(this)">Zero depreciation vs standard vehicle cover</div>
+            <div class="suggestion-chip" onclick="useSuggestion(this)">How to claim health insurance cashless?</div>
+            <div class="suggestion-chip" onclick="useSuggestion(this)">Tax benefits of health insurance India</div>
+        </div>
+
+        <!-- Footer badge -->
+        <div class="sidebar-footer">
+            <div class="sidebar-model">
+                <i class="fa-solid fa-circle" style="color:#10b981;font-size:0.5rem;"></i>
+                <span>Groq · Llama 3.3 · ChromaDB RAG</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- MAIN CHAT AREA                                         -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <main class="studio-main">
+
+        <!-- Top bar -->
+        <div class="chat-topbar">
+            <div class="chat-topbar-left">
+                <div class="chat-mode-badge" style="background:#eef0ff;border-color:#c7ccf5;color:#3b4fd8;">
+                    <i class="fa-solid fa-robot"></i>
+                    <span>Multi-Agent RAG Pipeline</span>
+                </div>
+                <div class="rag-badge">
+                    <i class="fa-solid fa-database"></i> 22 India knowledge chunks
+                </div>
+            </div>
+            <button class="clear-btn" onclick="clearChat()">
+                <i class="fa fa-trash-can"></i> Clear
+            </button>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" id="chat-messages">
+            <!-- Welcome -->
+            <div class="chat-welcome" id="chat-welcome">
+                <div class="welcome-icon" style="background:linear-gradient(135deg,#3b4fd8,var(--navy));">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <h3 class="welcome-title">Insurance Agent Pipeline</h3>
+                <p class="welcome-sub">
+                    Ask about any insurance topic. The Researcher Agent retrieves
+                    India-specific data from the RAG knowledge base, then the Writer
+                    Agent synthesizes a structured response just for you.
+                </p>
+                <div class="welcome-chips">
+                    <span class="w-chip" onclick="useSuggestion(this)">Best health plan for a family of 4?</span>
+                    <span class="w-chip" onclick="useSuggestion(this)">Which term policy has highest CSR?</span>
+                    <span class="w-chip" onclick="useSuggestion(this)">What is zero depreciation cover?</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom input bar -->
+        <div class="chat-input-wrap">
+            <div class="chat-input-bar">
+                <textarea
+                    id="chat-input"
+                    class="chat-textarea"
+                    placeholder="Ask the agent pipeline anything about insurance..."
+                    rows="1"
+                    onkeydown="handleKey(event)"
+                    oninput="autoResize(this)"
+                ></textarea>
+                <button class="send-btn agent-send" id="send-btn" onclick="sendAgentMessage()">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="input-footer-note">
+                <i class="fa fa-circle-info"></i>
+                Powered by Researcher + Writer Agents with India RAG knowledge base · Educational purposes only
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- STYLES                                                     -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<style>
+.content { padding: 0 !important; }
+footer   { display: none; }
+
+.studio-wrap {
+    display: flex;
+    height: calc(100vh - 64px);
+    background: var(--bg);
+    overflow: hidden;
+}
+
+/* ── Sidebar ── */
+.studio-sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--bg-white);
+    border-right: 1.5px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    gap: 0.5rem;
+    overflow-y: auto;
+}
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.5rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.75rem;
+}
+.sidebar-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--navy);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.sidebar-title { font-family:var(--font-head);font-size:0.95rem;font-weight:800;color:var(--navy); }
+.sidebar-sub   { font-size:0.72rem;color:var(--text-muted); }
+.sidebar-section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.8px;
+    padding: 0.75rem 0.5rem 0.25rem;
+}
+
+/* ── Pipeline steps in sidebar ── */
+.pipeline-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.25rem 0.5rem;
+}
+.pipeline-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+.pipeline-step.running { background: #eef0ff; }
+.pipeline-step.done    { background: var(--bg-sage-lt); }
+.ps-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    margin-top: 5px;
+    flex-shrink: 0;
+    transition: background 0.3s;
+}
+.pipeline-step.running .ps-dot { background: #3b4fd8; box-shadow: 0 0 0 3px rgba(59,79,216,0.2); animation: pulse 1s infinite; }
+.pipeline-step.done    .ps-dot { background: var(--sage-dk); }
+.ps-name { font-size: 0.8rem; font-weight: 600; color: var(--navy); }
+.ps-desc { font-size: 0.7rem; color: var(--text-muted); }
+.pipeline-arrow { text-align: center; color: var(--border); font-size: 0.7rem; padding: 0.1rem 0; }
+
+.sidebar-select {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--text-body);
+    background: var(--bg-white);
+    cursor: pointer;
+    margin-top: 0.25rem;
+}
+.sidebar-suggestions { display:flex;flex-direction:column;gap:0.3rem; }
+.suggestion-chip {
+    font-size: 0.78rem;
+    color: var(--text-body);
+    padding: 0.5rem 0.75rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1.4;
+}
+.suggestion-chip:hover { background:#eef0ff;border-color:#3b4fd8;color:#3b4fd8; }
+.sidebar-footer { margin-top:auto;padding-top:1rem;border-top:1px solid var(--border); }
+.sidebar-model  { display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--text-muted);padding:0.5rem; }
+
+/* ── Main ── */
+.studio-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg);
+}
+.chat-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: var(--bg-white);
+    border-bottom: 1.5px solid var(--border);
+    flex-shrink: 0;
+    gap: 0.75rem;
+}
+.chat-topbar-left { display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap; }
+.chat-mode-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.35rem 0.9rem;
+    border-radius: 100px;
+    border: 1px solid;
+}
+.rag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.7rem;
+    border-radius: 100px;
+}
+.clear-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-body);
+}
+.clear-btn:hover { border-color:#e57373;color:#e57373;background:#fff5f5; }
+
+/* ── Messages ── */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    scroll-behavior: smooth;
+}
+.chat-messages::-webkit-scrollbar { width:4px; }
+.chat-messages::-webkit-scrollbar-thumb { background:var(--border);border-radius:2px; }
+
+/* ── Welcome ── */
+.chat-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 2rem;
+    margin: auto;
+    max-width: 520px;
+}
+.welcome-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: #fff;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 8px 24px rgba(27,42,74,0.2);
+}
+.welcome-title { font-family:var(--font-head);font-size:1.5rem;font-weight:800;color:var(--navy);margin-bottom:0.5rem; }
+.welcome-sub   { font-size:0.9rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.5rem; }
+.welcome-chips { display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center; }
+.w-chip {
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    color: var(--text-body);
+    font-size: 0.8rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.w-chip:hover { background:#eef0ff;border-color:#3b4fd8;color:#3b4fd8; }
+
+/* ── Chat bubbles ── */
+.msg-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    animation: fadeInUp 0.3s ease;
+}
+.msg-row.user { flex-direction:row-reverse; }
+.msg-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    font-weight: 700;
+}
+.msg-avatar.ai   { background:linear-gradient(135deg,#3b4fd8,var(--navy));color:#fff; }
+.msg-avatar.user { background:var(--navy);color:#fff;font-size:0.78rem; }
+
+.msg-bubble {
+    max-width: 78%;
+    padding: 0.9rem 1.1rem;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    line-height: 1.75;
+    font-family: var(--font-body);
+}
+.msg-bubble.ai {
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    color: var(--text-body);
+    border-top-left-radius: 4px;
+    white-space: pre-wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.msg-bubble.user {
+    background: var(--navy);
+    color: #fff;
+    border-top-right-radius: 4px;
+}
+
+/* ── Agent metadata card (confidence, sources, logs) ── */
+.agent-meta {
+    margin-top: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 0.78rem;
+}
+.agent-meta-top {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.85rem;
+    background: var(--bg);
+    flex-wrap: wrap;
+}
+.conf-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 0.72rem;
+}
+.conf-high   { background:#d1fae5;color:#065f46; }
+.conf-medium { background:#fef3c7;color:#92400e; }
+.conf-low    { background:#fee2e2;color:#991b1b; }
+
+.agent-tags { display:flex;gap:0.4rem;flex-wrap:wrap; }
+.agent-tag {
+    font-size: 0.7rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 6px;
+    background: #eef0ff;
+    color: #3b4fd8;
+    font-weight: 600;
+}
+.agent-time { font-size:0.7rem;color:var(--text-muted);margin-left:auto; }
+
+.agent-logs-toggle {
+    padding: 0.4rem 0.85rem;
+    background: none;
+    border: none;
+    border-top: 1px solid var(--border);
+    width: 100%;
+    text-align: left;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: var(--font-body);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.agent-logs-toggle:hover { background:var(--bg);color:var(--navy); }
+.agent-logs {
+    display: none;
+    padding: 0.5rem 0.85rem;
+    background: #f8f9ff;
+    border-top: 1px solid var(--border);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: monospace;
+    line-height: 1.7;
+}
+.agent-logs.open { display: block; }
+
+/* ── Copy button ── */
+.copy-resp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+}
+.copy-resp-btn:hover { color:var(--navy);border-color:var(--navy); }
+
+/* ── Typing indicator ── */
+.typing-bubble {
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    border-top-left-radius: 4px;
+    padding: 0.85rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.typing-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #3b4fd8;
+    animation: typingBounce 1.2s infinite ease-in-out;
+}
+.typing-dot:nth-child(1){ animation-delay:0s; }
+.typing-dot:nth-child(2){ animation-delay:0.2s; }
+.typing-dot:nth-child(3){ animation-delay:0.4s; }
+
+/* ── Agent stage indicator (while running) ── */
+.agent-stage-bubble {
+    background: var(--bg-white);
+    border: 1.5px solid #c7ccf5;
+    border-radius: 14px;
+    border-top-left-radius: 4px;
+    padding: 0.85rem 1.1rem;
+    font-size: 0.82rem;
+    color: #3b4fd8;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.stage-line {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+}
+.stage-line.done   { color:var(--sage-dk); }
+.stage-line.active { color:#3b4fd8;font-weight:600; }
+.stage-line.wait   { color:var(--text-muted); }
+
+/* ── Input bar ── */
+.chat-input-wrap {
+    padding: 1rem 1.5rem 1.25rem;
+    background: var(--bg-white);
+    border-top: 1.5px solid var(--border);
+    flex-shrink: 0;
+}
+.chat-input-bar {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 0.75rem 0.75rem 0.75rem 1.1rem;
+    transition: border-color 0.2s;
+}
+.chat-input-bar:focus-within { border-color:#3b4fd8;box-shadow:0 0 0 3px rgba(59,79,216,0.1); }
+.chat-textarea {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--text-body);
+    resize: none;
+    outline: none;
+    max-height: 120px;
+    line-height: 1.5;
+}
+.chat-textarea::placeholder { color:var(--text-muted); }
+.send-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: none;
+    color: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.agent-send              { background:#3b4fd8; }
+.agent-send:hover        { background:var(--navy);transform:scale(1.05); }
+.agent-send:disabled     { opacity:0.5;cursor:not-allowed;transform:none; }
+.input-footer-note {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.6rem;
+    justify-content: center;
+}
+
+@keyframes fadeInUp {
+    from { opacity:0;transform:translateY(8px); }
+    to   { opacity:1;transform:translateY(0); }
+}
+@keyframes typingBounce {
+    0%,80%,100% { transform:scale(0.7);opacity:0.5; }
+    40%         { transform:scale(1.2);opacity:1; }
+}
+@keyframes pulse {
+    0%,100% { opacity:1; }
+    50%     { opacity:0.4; }
+}
+</style>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                                  -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<script>
+let isGenerating = false;
+const userInitial = "{{ current_user.username[0].upper() }}";
+
+// ── Use suggestion chip ───────────────────────────────────────
+function useSuggestion(el) {
+    document.getElementById('chat-input').value = el.textContent.trim();
+    document.getElementById('chat-input').focus();
+    autoResize(document.getElementById('chat-input'));
+}
+
+// ── Enter key ─────────────────────────────────────────────────
+function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendAgentMessage();
+    }
+}
+
+// ── Auto resize textarea ──────────────────────────────────────
+function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ── Clear chat ────────────────────────────────────────────────
+function clearChat() {
+    document.querySelectorAll('.msg-row').forEach(el => el.remove());
+    document.getElementById('chat-welcome').style.display = 'flex';
+    resetPipelineSteps();
+}
+
+// ── Scroll to bottom ──────────────────────────────────────────
+function scrollBottom() {
+    const m = document.getElementById('chat-messages');
+    m.scrollTop = m.scrollHeight;
+}
+
+// ── Pipeline step UI helpers ──────────────────────────────────
+function setPipelineStep(step) {
+    // step: 'researcher' | 'handoff' | 'writer' | 'done' | 'idle'
+    const steps = ['researcher','handoff','writer'];
+    const idx   = steps.indexOf(step);
+
+    steps.forEach((s, i) => {
+        const el = document.getElementById('ps-' + s);
+        el.classList.remove('running','done');
+        if (step === 'done') {
+            el.classList.add('done');
+        } else if (i < idx) {
+            el.classList.add('done');
+        } else if (i === idx) {
+            el.classList.add('running');
+        }
+    });
+}
+
+function resetPipelineSteps() {
+    ['researcher','handoff','writer'].forEach(s => {
+        document.getElementById('ps-' + s).classList.remove('running','done');
+    });
+}
+
+// ── Add user bubble ───────────────────────────────────────────
+function addUserMessage(text) {
+    document.getElementById('chat-welcome').style.display = 'none';
+    const msgs = document.getElementById('chat-messages');
+    const row  = document.createElement('div');
+    row.className = 'msg-row user';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'msg-avatar user';
+    avatar.textContent = userInitial;
+
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble user';
+    bubble.textContent = text;
+
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    msgs.appendChild(row);
+    scrollBottom();
+}
+
+// ── Stage indicator while agent runs ─────────────────────────
+function showAgentStages() {
+    const msgs = document.getElementById('chat-messages');
+    const row  = document.createElement('div');
+    row.className = 'msg-row ai';
+    row.id = 'stage-row';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'msg-avatar ai';
+    avatar.textContent = '🤖';
+
+    const box = document.createElement('div');
+    box.className = 'agent-stage-bubble';
+    box.id = 'stage-box';
+    box.innerHTML = `
+        <div class="stage-line active" id="sl-researcher">
+            <i class="fa fa-spinner fa-spin"></i> Researcher Agent — querying RAG knowledge base...
+        </div>
+        <div class="stage-line wait" id="sl-handoff">
+            <i class="fa fa-clock"></i> Handoff Gate — waiting...
+        </div>
+        <div class="stage-line wait" id="sl-writer">
+            <i class="fa fa-clock"></i> Writer Agent — waiting...
+        </div>`;
+
+    row.appendChild(avatar);
+    row.appendChild(box);
+    msgs.appendChild(row);
+    scrollBottom();
+}
+
+function updateStage(stage) {
+    // stage: 'handoff' | 'writer'
+    const map = {
+        handoff: {
+            researcher: '<i class="fa fa-check"></i> Researcher Agent — research complete',
+            handoff:    '<i class="fa fa-spinner fa-spin"></i> Handoff Gate — validating research packet...',
+            writer:     '<i class="fa fa-clock"></i> Writer Agent — waiting...'
+        },
+        writer: {
+            researcher: '<i class="fa fa-check"></i> Researcher Agent — research complete',
+            handoff:    '<i class="fa fa-check"></i> Handoff Gate — packet validated',
+            writer:     '<i class="fa fa-spinner fa-spin"></i> Writer Agent — synthesizing response...'
+        }
+    };
+    const m = map[stage];
+    if (!m) return;
+    const slr = document.getElementById('sl-researcher');
+    const slh = document.getElementById('sl-handoff');
+    const slw = document.getElementById('sl-writer');
+    if (slr) { slr.innerHTML = m.researcher; slr.className = 'stage-line done'; }
+    if (slh) { slh.innerHTML = m.handoff;    slh.className = stage === 'handoff' ? 'stage-line active' : 'stage-line done'; }
+    if (slw) { slw.innerHTML = m.writer;     slw.className = stage === 'writer'  ? 'stage-line active' : 'stage-line wait'; }
+    scrollBottom();
+}
+
+function removeStageRow() {
+    const r = document.getElementById('stage-row');
+    if (r) r.remove();
+}
+
+// ── Add agent response bubble ─────────────────────────────────
+function addAgentResponse(data) {
+    const msgs = document.getElementById('chat-messages');
+    const row  = document.createElement('div');
+    row.className = 'msg-row ai';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'msg-avatar ai';
+    avatar.textContent = '🤖';
+
+    const wrap = document.createElement('div');
+    wrap.style.maxWidth = '78%';
+
+    // Main bubble
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble ai';
+    bubble.textContent = data.explanation;
+
+    // Copy button
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-resp-btn';
+    copyBtn.innerHTML = '<i class="fa fa-copy"></i> Copy';
+    copyBtn.onclick = () => {
+        navigator.clipboard.writeText(data.explanation).then(() => {
+            copyBtn.innerHTML = '<i class="fa fa-check"></i> Copied!';
+            setTimeout(() => copyBtn.innerHTML = '<i class="fa fa-copy"></i> Copy', 2000);
+        });
+    };
+    bubble.appendChild(document.createElement('br'));
+    bubble.appendChild(copyBtn);
+
+    // Agent metadata card
+    const confClass = { high:'conf-high', medium:'conf-medium', low:'conf-low' }[data.confidence] || 'conf-low';
+    const confIcon  = { high:'✅', medium:'⚠️', low:'❌' }[data.confidence] || '❌';
+    const agentTags = (data.agents_involved || []).map(a =>
+        `<span class="agent-tag"><i class="fa fa-robot"></i> ${a}</span>`
+    ).join('');
+    const sourceTags = (data.sources_used || []).map(s =>
+        `<span class="agent-tag" style="background:#f0fdf4;color:#15803d;"><i class="fa fa-database"></i> ${s}</span>`
+    ).join('');
+
+    const meta = document.createElement('div');
+    meta.className = 'agent-meta';
+    const logId = 'logs-' + Date.now();
+    meta.innerHTML = `
+        <div class="agent-meta-top">
+            <span class="conf-badge ${confClass}">${confIcon} ${(data.confidence||'').toUpperCase()} confidence</span>
+            <div class="agent-tags">${agentTags}${sourceTags}</div>
+            <span class="agent-time"><i class="fa fa-clock"></i> ${data.total_time_s || '?'}s</span>
+        </div>
+        <button class="agent-logs-toggle" onclick="toggleLogs('${logId}')">
+            <i class="fa fa-terminal"></i> Pipeline logs (${(data.pipeline_logs||[]).length} entries)
+        </button>
+        <div class="agent-logs" id="${logId}">
+${(data.pipeline_logs || []).join('\n')}
+        </div>`;
+
+    wrap.appendChild(bubble);
+    wrap.appendChild(meta);
+    row.appendChild(avatar);
+    row.appendChild(wrap);
+    msgs.appendChild(row);
+    scrollBottom();
+}
+
+function toggleLogs(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('open');
+}
+
+// ── Main send function ────────────────────────────────────────
+async function sendAgentMessage() {
+    const input = document.getElementById('chat-input');
+    const text  = input.value.trim();
+    if (!text || isGenerating) return;
+
+    isGenerating = true;
+    const btn    = document.getElementById('send-btn');
+    btn.disabled = true;
+
+    const policyType = document.getElementById('agent-policy-select').value || null;
+
+    addUserMessage(text);
+    input.value = '';
+    input.style.height = 'auto';
+
+    // Show stage indicators + update sidebar pipeline
+    showAgentStages();
+    setPipelineStep('researcher');
+
+    // Simulate stage transitions while waiting
+    const handoffTimer = setTimeout(() => {
+        updateStage('handoff');
+        setPipelineStep('handoff');
+    }, 2500);
+
+    const writerTimer = setTimeout(() => {
+        updateStage('writer');
+        setPipelineStep('writer');
+    }, 5000);
+
+    try {
+        const resp = await fetch('/api/agent-explain', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: text, policy_type: policyType })
+        });
+        const data = await resp.json();
+
+        clearTimeout(handoffTimer);
+        clearTimeout(writerTimer);
+        removeStageRow();
+        setPipelineStep('done');
+
+        if (data.success) {
+            addAgentResponse(data);
+        } else {
+            addErrorBubble(data.error || 'Agent pipeline failed. Please try again.');
+            resetPipelineSteps();
+        }
+    } catch (e) {
+        clearTimeout(handoffTimer);
+        clearTimeout(writerTimer);
+        removeStageRow();
+        addErrorBubble('Network error. Please check your connection.');
+        resetPipelineSteps();
+    }
+
+    isGenerating = false;
+    btn.disabled = false;
+    scrollBottom();
+}
+
+function addErrorBubble(msg) {
+    const msgs = document.getElementById('chat-messages');
+    const row  = document.createElement('div');
+    row.className = 'msg-row ai';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'msg-avatar ai';
+    avatar.textContent = '🤖';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble ai';
+    bubble.textContent = '⚠️ ' + msg;
+
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    msgs.appendChild(row);
+    scrollBottom();
+}
+</script>
+
+{% endblock %}

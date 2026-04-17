@@ -2,91 +2,162 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insurance Hub</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
 
+<!-- ═══════════════════════════════════════════════════════════
+     NAVBAR — uses existing style.css classes exactly
+     ═══════════════════════════════════════════════════════════ -->
 <nav class="navbar">
+
+    <!-- Brand logo -->
     <div class="logo">Insurance<span>Hub</span></div>
 
+    <!-- Nav links — centre -->
     <div class="nav-links">
         {% if current_user.is_authenticated %}
 
             <a href="{{ url_for('main.home') }}">
-                <i class="fa fa-house" style="font-size:0.78rem;margin-right:0.3rem"></i>Home
+                <i class="fa-solid fa-house" style="font-size:0.78rem;margin-right:0.3rem;"></i>Home
             </a>
+
             <a href="{{ url_for('main.health') }}">
-                <i class="fa-solid fa-heart-pulse" style="font-size:0.78rem;margin-right:0.3rem"></i>Health
+                <i class="fa-solid fa-heart-pulse" style="font-size:0.78rem;margin-right:0.3rem;"></i>Health
             </a>
+
             <a href="{{ url_for('main.term') }}">
-                <i class="fa-solid fa-shield-halved" style="font-size:0.78rem;margin-right:0.3rem"></i>Term
+                <i class="fa-solid fa-umbrella" style="font-size:0.78rem;margin-right:0.3rem;"></i>Term
             </a>
+
             <a href="{{ url_for('main.vehicle') }}">
-                <i class="fa-solid fa-car-side" style="font-size:0.78rem;margin-right:0.3rem"></i>Vehicle
+                <i class="fa-solid fa-car" style="font-size:0.78rem;margin-right:0.3rem;"></i>Vehicle
             </a>
 
-            <!-- ── AI Studio Link ── -->
+            <!-- AI Studio pill button (sage green) -->
             <a href="{{ url_for('main.ai_studio') }}" class="nav-ai-btn">
-                <i class="fa-solid fa-wand-magic-sparkles" style="font-size:0.78rem;margin-right:0.3rem"></i>AI Studio
+                <i class="fa-solid fa-wand-magic-sparkles" style="font-size:0.78rem;margin-right:0.3rem;"></i>AI Studio
             </a>
 
-            <!-- User avatar dropdown -->
-            <div class="nav-user-dropdown">
-                <button class="nav-user-btn" onclick="toggleDropdown()">
-                    <div class="nav-avatar">{{ current_user.username[0].upper() }}</div>
-                    <span class="nav-username">{{ current_user.username }}</span>
-                    <i class="fa fa-chevron-down nav-chevron"></i>
-                </button>
-                <div class="dropdown-menu" id="navDropdown">
-                    <div class="dropdown-header">
-                        <div class="dropdown-avatar">{{ current_user.username[0].upper() }}</div>
-                        <div>
-                            <div class="dropdown-name">{{ current_user.username }}</div>
-                            <div class="dropdown-email">{{ current_user.email }}</div>
-                        </div>
-                    </div>
-                    <div class="dropdown-divider"></div>
-                    <a href="{{ url_for('main.ai_studio') }}" class="dropdown-item">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> AI Studio
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item">
-                        <i class="fa fa-arrow-right-from-bracket"></i> Sign Out
-                    </a>
-                </div>
-            </div>
+            <!-- AI Agents pill button (indigo) -->
+            <a href="{{ url_for('main.agent_ui') }}" class="nav-agent-btn">
+                <i class="fa-solid fa-robot" style="font-size:0.78rem;margin-right:0.3rem;"></i>AI Agents
+            </a>
 
         {% else %}
-            <a href="{{ url_for('auth.login') }}" class="nav-login-btn">
-                <i class="fa fa-arrow-right-to-bracket" style="font-size:0.78rem;margin-right:0.3rem"></i>Sign In
-            </a>
+
+            <a href="{{ url_for('auth.login') }}"    class="nav-login-btn">Sign In</a>
             <a href="{{ url_for('auth.register') }}" class="primary-btn" style="padding:0.45rem 1.1rem;font-size:0.85rem;">
                 Get Started
             </a>
+
         {% endif %}
     </div>
+
+    <!-- Right side: user dropdown or auth buttons -->
+    {% if current_user.is_authenticated %}
+
+        <div class="nav-user-dropdown">
+            <button class="nav-user-btn" onclick="toggleDropdown()" type="button">
+                <div class="nav-avatar">{{ current_user.username[0].upper() }}</div>
+                <span class="nav-username">{{ current_user.username }}</span>
+                <i class="fa fa-chevron-down nav-chevron"></i>
+            </button>
+
+            <div class="dropdown-menu" id="navDropdown">
+                <!-- User info header -->
+                <div class="dropdown-header">
+                    <div class="dropdown-avatar">{{ current_user.username[0].upper() }}</div>
+                    <div>
+                        <div class="dropdown-name">{{ current_user.username }}</div>
+                        <div class="dropdown-email">{{ current_user.email }}</div>
+                    </div>
+                </div>
+
+                <div class="dropdown-divider"></div>
+
+                <a href="{{ url_for('main.add_policy') }}" class="dropdown-item">
+                    <i class="fa fa-plus"></i> Add Policy
+                </a>
+                <a href="{{ url_for('main.ai_studio') }}" class="dropdown-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Studio
+                </a>
+                <a href="{{ url_for('main.agent_ui') }}" class="dropdown-item">
+                    <i class="fa-solid fa-robot"></i> AI Agents
+                </a>
+
+                <div class="dropdown-divider"></div>
+
+                <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item">
+                    <i class="fa fa-right-from-bracket"></i> Sign Out
+                </a>
+            </div>
+        </div>
+
+    {% endif %}
+
 </nav>
 
+<!-- ═══════════════════════════════════════════════════════════
+     FLASH MESSAGES
+     ═══════════════════════════════════════════════════════════ -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div style="padding:0.75rem 3rem 0;">
+            {% for category, message in messages %}
+                <div class="flash flash-{{ category }}"
+                     style="display:flex;align-items:center;gap:0.6rem;
+                            margin-bottom:0.5rem;position:relative;">
+                    <i class="fa {% if category == 'success' %}fa-circle-check
+                                  {% elif category == 'danger'  %}fa-circle-xmark
+                                  {% elif category == 'warning' %}fa-triangle-exclamation
+                                  {% else %}fa-circle-info{% endif %}"></i>
+                    {{ message }}
+                    <button onclick="this.parentElement.remove()"
+                            style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);
+                                   background:none;border:none;cursor:pointer;
+                                   font-size:1rem;color:inherit;opacity:0.6;line-height:1;">
+                        ×
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN CONTENT
+     ═══════════════════════════════════════════════════════════ -->
 <div class="content">
     {% block content %}{% endblock %}
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════════ -->
 <footer>
-    &copy; 2026 InsuranceHub &mdash; Cloud Deployed &nbsp;&middot;&nbsp; All rights reserved
+    &copy; 2026 InsuranceHub &mdash; Cloud Deployed &nbsp;&middot;&nbsp; Built with Flask, Groq &amp; Gemini
 </footer>
 
+<!-- ═══════════════════════════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════════════════════════ -->
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
 <script>
+/* ── Dropdown toggle ── */
 function toggleDropdown() {
-    const menu = document.getElementById('navDropdown');
-    menu.classList.toggle('open');
+    document.getElementById('navDropdown').classList.toggle('open');
 }
+
+/* ── Close dropdown on outside click ── */
 document.addEventListener('click', function(e) {
     const dd = document.querySelector('.nav-user-dropdown');
     if (dd && !dd.contains(e.target)) {
@@ -95,5 +166,52 @@ document.addEventListener('click', function(e) {
     }
 });
 </script>
+
+<!-- ── Extra navbar pill styles (extend style.css, don't conflict) ── -->
+<style>
+/* AI Studio pill — sage green, matches existing nav-ai-btn if present */
+.nav-ai-btn {
+    font-weight: 600 !important;
+    color: var(--sage-dk) !important;
+    background: var(--bg-sage-lt) !important;
+    border: 1px solid var(--sage-lt) !important;
+    border-radius: 100px !important;
+    padding: 0.38rem 1rem !important;
+    font-size: 0.88rem !important;
+    text-decoration: none;
+    transition: all 0.2s ease !important;
+    display: inline-flex;
+    align-items: center;
+}
+.nav-ai-btn:hover {
+    background: var(--bg-sage) !important;
+    border-color: var(--sage-dk) !important;
+    color: var(--sage-dk) !important;
+}
+
+/* AI Agents pill — indigo, distinct from AI Studio */
+.nav-agent-btn {
+    font-weight: 600 !important;
+    color: #3b4fd8 !important;
+    background: #eef0ff !important;
+    border: 1px solid #c7ccf5 !important;
+    border-radius: 100px !important;
+    padding: 0.38rem 1rem !important;
+    font-size: 0.88rem !important;
+    text-decoration: none;
+    transition: all 0.2s ease !important;
+    display: inline-flex;
+    align-items: center;
+}
+.nav-agent-btn:hover {
+    background: #dde1ff !important;
+    border-color: #3b4fd8 !important;
+    color: #3b4fd8 !important;
+}
+
+/* Flash close button reset */
+.flash { position: relative; }
+</style>
+
 </body>
 </html>

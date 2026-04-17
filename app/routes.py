@@ -51,8 +51,7 @@ def add_policy():
             db.session.commit()
             flash("Policy added successfully!", "success")
             return redirect(url_for("main.home"))
-
-        except Exception as e:
+        except Exception:
             db.session.rollback()
             flash("Error adding policy. Please try again.", "danger")
 
@@ -78,8 +77,7 @@ def edit_policy(id):
             db.session.commit()
             flash("Policy updated successfully!", "success")
             return redirect(url_for("main.home"))
-
-        except Exception as e:
+        except Exception:
             db.session.rollback()
             flash("Error updating policy.", "danger")
 
@@ -100,7 +98,6 @@ def delete_policy(id):
         db.session.delete(policy)
         db.session.commit()
         flash("Policy deleted successfully!", "success")
-
     except Exception:
         db.session.rollback()
         flash("Error deleting policy.", "danger")
@@ -112,77 +109,28 @@ def delete_policy(id):
 @main.route("/ai-studio", methods=["GET", "POST"])
 @login_required
 def ai_studio():
-    explanation = None
-    error       = None
-    active_tab  = "explain"
-
-    if request.method == "POST":
-        action      = request.form.get("action")
-        policy_type = request.form.get("policy_type", "Health Insurance")
-        user_prompt = request.form.get("prompt", "").strip()
-        active_tab  = action
-
-        if not user_prompt:
-            error = "Please enter a prompt before submitting."
-        elif action == "explain":
-            try:
-                from .ai import generate_policy_explanation
-                explanation = generate_policy_explanation(
-                    user_prompt, policy_type
-                )
-            except Exception as e:
-                err_str = str(e)
-                if "authentication" in err_str.lower():
-                    error = "Invalid GROQ_API_KEY. Please check your .env file."
-                elif "rate" in err_str.lower():
-                    error = "Too many requests. Please wait a moment and try again."
-                else:
-                    error = f"AI error: {err_str}"
-
-    return render_template("ai_studio.html",
-                           explanation=explanation,
-                           error=error,
-                           active_tab=active_tab)
+    return render_template("ai_studio.html")
 
 
-# ── API: ASYNC IMAGE GENERATION ───────────────────────────────
-# Called by JavaScript fetch() — returns JSON, no page reload
-@main.route("/api/generate-image", methods=["POST"])
+# ── AGENT UI PAGE ─────────────────────────────────────────────
+# Separate page for the multi-agent RAG pipeline
+@main.route("/agent-ui")
 @login_required
-def generate_image_api():
-    """
-    Async endpoint for image generation.
-    JS calls this in background → page never freezes.
-    Returns: { success: true, image_url: "data:image/jpeg;base64,..." }
-         or: { success: false, error: "..." }
-    """
-    try:
-        data        = request.get_json()
-        policy_type = data.get("policy_type", "Health Insurance")
-        concept     = data.get("prompt", "").strip()
-
-        if not concept:
-            return jsonify({"success": False, "error": "Prompt is empty."})
-
-        from .ai import generate_risk_infographic
-        image_url = generate_risk_infographic(policy_type, concept)
-
-        return jsonify({"success": True, "image_url": image_url})
-
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)})
+def agent_ui():
+    return render_template("agent_ui.html")
 
 
-# ── API: ASYNC TEXT EXPLANATION ───────────────────────────────
-# Called by JS fetch() from new chat UI — returns JSON
+# ═══════════════════════════════════════════════════════════════
+# JSON API ENDPOINTS
+# ═══════════════════════════════════════════════════════════════
+
+# ── API: ASYNC TEXT EXPLANATION (single LLM) ──────────────────
 @main.route("/api/explain", methods=["POST"])
 @login_required
 def explain_api():
     """
-    Async endpoint for policy explanation.
-    JS calls this → returns JSON → no page reload.
-    Returns: { success: true, explanation: "..." }
-         or: { success: false, error: "..." }
+    Single-LLM endpoint — fast, used by AI Studio Policy Explainer tab.
+    Returns: { success, explanation }
     """
     try:
         data        = request.get_json()
@@ -194,9 +142,80 @@ def explain_api():
 
         from .ai import generate_policy_explanation
         explanation = generate_policy_explanation(user_prompt, policy_type)
-
         return jsonify({"success": True, "explanation": explanation})
 
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
-    
+
+
+# ── API: ASYNC IMAGE GENERATION ───────────────────────────────
+@main.route("/api/generate-image", methods=["POST"])
+@login_required
+def generate_image_api():
+    """
+    Image generation endpoint — used by AI Studio Infographic tab.
+    Returns: { success, image_url (base64 data URL) }
+    """
+    try:
+        data        = request.get_json()
+        policy_type = data.get("policy_type", "Health Insurance")
+        concept     = data.get("prompt", "").strip()
+
+        if not concept:
+            return jsonify({"success": False, "error": "Prompt is empty."})
+
+        from .ai import generate_risk_infographic
+        image_url = generate_risk_infographic(policy_type, concept)
+        return jsonify({"success": True, "image_url": image_url})
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+# ── API: MULTI-AGENT RAG PIPELINE ────────────────────────────
+@main.route("/api/agent-explain", methods=["POST"])
+@login_required
+def agent_explain_api():
+    """
+    Multi-Agent endpoint: ResearcherAgent → WriterAgent pipeline.
+
+    Flow:
+      1. ResearcherAgent queries ChromaDB RAG (India knowledge base)
+      2. ResearcherAgent runs supplementary LLM research
+      3. Handoff Gate validates ResearchPacket
+      4. WriterAgent synthesizes into structured Indian-market response
+      5. Returns content + full pipeline metadata
+
+    Returns: {
+        success, explanation, policy_type, confidence,
+        sources_used, agents_involved, total_time_s,
+        pipeline_logs, mode
+    }
+    """
+    try:
+        data        = request.get_json()
+        user_prompt = data.get("prompt", "").strip()
+        policy_type = data.get("policy_type", None)
+
+        if not user_prompt:
+            return jsonify({"success": False, "error": "Prompt is empty."})
+
+        # Import orchestrator — singleton, initialised once
+        from .agents.orchestrator import get_orchestrator
+        orchestrator = get_orchestrator()
+        result       = orchestrator.run(user_prompt, policy_type)
+
+        return jsonify({
+            "success"         : True,
+            "explanation"     : result["content"],
+            "policy_type"     : result["policy_type"],
+            "confidence"      : result["confidence"],
+            "sources_used"    : result["sources_used"],
+            "agents_involved" : result["agents_involved"],
+            "total_time_s"    : result["total_time_s"],
+            "pipeline_logs"   : result["pipeline_logs"],
+            "mode"            : "multi_agent_rag"
+        })
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
