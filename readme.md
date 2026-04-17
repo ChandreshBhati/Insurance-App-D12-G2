@@ -232,42 +232,7 @@ Insurance_app/
 
 ---
 
-## 🤖 AI Pipeline Architecture
 
-### Text-to-Text Pipeline
-```
-User types question in chat input
-            ↓
-JavaScript fetch() → POST /api/explain
-            ↓
-Flask route → ai.py:generate_policy_explanation()
-            ↓
-Groq API (Llama 3.3 70B) — ~1-2 seconds
-  System prompt: Indian insurance advisor persona
-  Structured output: Overview, Benefits, Warning, Premium
-            ↓
-JSON response → Chat bubble rendered in UI
-```
-
-### Text-to-Image Pipeline
-```
-User types visual concept + selects policy type
-            ↓
-JavaScript fetch() → POST /api/generate-image
-  (page stays interactive — no freeze)
-            ↓
-Flask route → ai.py:generate_risk_infographic()
-            ↓
-Method 1: Gemini Flash Image API — 500 free/day
-  ↓ if quota hit
-Method 2: HF FLUX.1-Dev (provider=auto) — Raphael AI quality
-  ↓ if fails
-Method 3: HF FLUX.1-schnell — faster fallback
-            ↓
-PIL Image → base64 encoded → data URL
-            ↓
-JSON response → Image chat bubble with Save button
-```
 
 ---
 
@@ -347,17 +312,9 @@ google-generativeai   # Gemini image generation
 
 ---
 
-## 🏆 Key Technical Achievements
+## Future scope 
 
-**Multimodal AI Integration** — Seamlessly combined two different AI modalities (text generation + image generation) within a single Flask application, with graceful multi-provider fallback ensuring maximum uptime.
-
-**Async Architecture** — Eliminated page freezes during AI generation (10-60 seconds) by implementing dedicated REST API endpoints consumed by JavaScript fetch() — a production-grade UX pattern.
-
-**Real-World Debugging** — Resolved genuine production issues including deprecated Hugging Face inference endpoints (HTTP 410), Docker Hub authentication mismatches, Kubernetes memory constraints on t2.micro (switched from Minikube to kubeadm), and image API provider failures with automatic fallback.
-
-**Zero-Dependency Frontend** — Entire UI built with vanilla CSS and JavaScript — no React, no Bootstrap, no jQuery — demonstrating deep understanding of web fundamentals.
-
-**User-Scoped Data Architecture** — Complete multi-user system where every database query is filtered by `user_id` and every mutation validates ownership — production-level data isolation.
+**Target** :- Design and implement an architecture of collaborative Insurance agents featuring specialization and hand-off protocols. The system consists of a Researcher Agent dedicated to sourcing information (e.g., Policy Coverage) and a Writer Agent tasked with synthesizing and formatting the data. This project demonstrates advanced inter-agent communication, state management, and the orchestration of complex workflows to achieve high-quality, structured outputs. RAG based integration for more precise outputs catering to indian customers and market.
 
 ---
 
