@@ -197,6 +197,138 @@
 
     </section>
 
+    <!-- ── POLICY ANALYTICS (Pie Chart) ── -->
+    <section class="analytics-section" id="analytics-section">
+        <div class="section-header">
+            <h2>Policy Analytics</h2>
+            <p>A quick snapshot of how your portfolio is distributed across policy types</p>
+        </div>
+
+        <div class="analytics-card">
+            <!-- Left: Doughnut chart -->
+            <div class="chart-area">
+                <div class="chart-wrap">
+                    <canvas id="policyPieChart" width="280" height="280"></canvas>
+                    <div class="chart-center-label" id="chartCenterLabel">
+                        <span class="chart-total-num" id="chartTotalNum">—</span>
+                        <span class="chart-total-txt">Policies</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Legend + summary stats -->
+            <div class="chart-legend-area">
+                <div class="chart-legend" id="chartLegend">
+                    <!-- Injected by JS -->
+                    <div class="chart-empty-msg" id="chartEmptyMsg" style="display:none;">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <p>No policies added yet.<br>Add your first policy to see analytics.</p>
+                        <a href="{{ url_for('main.add_policy') }}" class="primary-btn" style="margin-top:1rem;">
+                            <i class="fa fa-plus"></i> Add Policy
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+(function() {
+    /* Palette that matches the site's design tokens */
+    const PALETTE = [
+        { bg: '#6aaa78', border: '#4a8c58', label: 'Health Insurance' },
+        { bg: '#1b2a4a', border: '#0f1c32', label: 'Term Insurance'   },
+        { bg: '#3d9e8c', border: '#2d7a6c', label: 'Vehicle Insurance' },
+        { bg: '#e06b3f', border: '#b84e27', label: 'Other'            },
+    ];
+
+    /* Map a policy_type string to a colour */
+    function colourFor(label) {
+        const l = label.toLowerCase();
+        if (l.includes('health'))  return PALETTE[0];
+        if (l.includes('term'))    return PALETTE[1];
+        if (l.includes('vehicle')) return PALETTE[2];
+        return PALETTE[3];
+    }
+
+    async function loadChart() {
+        try {
+            const res  = await fetch('/api/policy-distribution');
+            const data = await res.json();
+
+            const labels = data.labels || [];
+            const counts = data.counts || [];
+            const total  = counts.reduce((a, b) => a + b, 0);
+
+            /* Update centre label */
+            document.getElementById('chartTotalNum').textContent = total || '0';
+
+            if (total === 0) {
+                document.getElementById('chartEmptyMsg').style.display = 'flex';
+                document.getElementById('policyPieChart').style.display = 'none';
+                return;
+            }
+
+            /* Build legend */
+            const legendEl = document.getElementById('chartLegend');
+            const colours  = labels.map(colourFor);
+
+            legendEl.innerHTML = labels.map((lbl, i) => {
+                const pct = ((counts[i] / total) * 100).toFixed(1);
+                return `
+                <div class="legend-item">
+                    <span class="legend-dot" style="background:${colours[i].bg}; box-shadow:0 0 0 3px ${colours[i].bg}22;"></span>
+                    <div class="legend-info">
+                        <span class="legend-label">${lbl}</span>
+                        <span class="legend-meta">${counts[i]} polic${counts[i]===1?'y':'ies'} &bull; ${pct}%</span>
+                    </div>
+                    <span class="legend-count" style="color:${colours[i].bg}">${counts[i]}</span>
+                </div>`;
+            }).join('');
+
+            /* Draw chart */
+            const ctx = document.getElementById('policyPieChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: colours.map(c => c.bg),
+                        borderColor:     colours.map(c => c.border),
+                        borderWidth: 2,
+                        hoverOffset: 10,
+                        borderRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    cutout: '68%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => {
+                                    const pct = ((ctx.parsed / total) * 100).toFixed(1);
+                                    return ` ${ctx.parsed} polic${ctx.parsed===1?'y':'ies'}  (${pct}%)`;
+                                }
+                            }
+                        }
+                    },
+                    animation: { animateRotate: true, duration: 900, easing: 'easeInOutQuart' }
+                }
+            });
+        } catch(err) {
+            console.error('Chart load error:', err);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadChart);
+})();
+</script>
 
 {% endblock %}

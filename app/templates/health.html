@@ -207,6 +207,40 @@
 
     </div><!-- /info-grid -->
 
+    <!-- ── IRDAI REFERENCE DOCUMENTS ── -->
+    <div class="irdai-downloads">
+        <div class="irdai-downloads-header">
+            <div class="irdai-icon"><i class="fa-solid fa-file-pdf"></i></div>
+            <div>
+                <div class="irdai-label">Official Reference</div>
+                <h3>IRDAI Regulatory Documents</h3>
+            </div>
+        </div>
+        <p class="irdai-desc">Download the latest IRDAI circulars and regulatory outlook documents for authoritative guidance on Indian insurance policies.</p>
+        <div class="irdai-pdf-list">
+            <a href="{{ url_for('main.download_pdf', key='irdai-ind-as-circular') }}" class="pdf-download-btn" download>
+                <div class="pdf-icon-wrap">
+                    <i class="fa-solid fa-file-pdf"></i>
+                </div>
+                <div class="pdf-info">
+                    <span class="pdf-name">IRDAI Ind AS Circular</span>
+                    <span class="pdf-meta">Circular · 01 April 2026 · Official</span>
+                </div>
+                <div class="pdf-dl-arrow"><i class="fa-solid fa-download"></i></div>
+            </a>
+            <a href="{{ url_for('main.download_pdf', key='irdai-regulatory-outlook') }}" class="pdf-download-btn" download>
+                <div class="pdf-icon-wrap">
+                    <i class="fa-solid fa-file-pdf"></i>
+                </div>
+                <div class="pdf-info">
+                    <span class="pdf-name">Insurance Regulatory Outlook 2026</span>
+                    <span class="pdf-meta">Report · 2026 Edition · IRDAI</span>
+                </div>
+                <div class="pdf-dl-arrow"><i class="fa-solid fa-download"></i></div>
+            </a>
+        </div>
+    </div>
+
     <div class="policy-page-cta">
         <a href="{{ url_for('main.add_policy') }}" class="primary-btn">
             <i class="fa fa-plus"></i> Add a Health Policy

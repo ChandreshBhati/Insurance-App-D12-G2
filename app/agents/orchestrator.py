@@ -58,9 +58,9 @@ class AgentState:
         return round(time.time() - self.start_time, 2)
 
 
-# ═══════════════════════════════════════════════════════════════
+
 # ORCHESTRATOR
-# ═══════════════════════════════════════════════════════════════
+
 class InsuranceOrchestrator:
     """
     Orchestrates the Researcher → Writer agent pipeline.
@@ -118,11 +118,11 @@ class InsuranceOrchestrator:
         Returns:
             dict with content, metadata, pipeline info
         """
-        # ── Initialize state ──────────────────────────────────
+        # first state object to track the entire pipeline
         state = AgentState(query=query, policy_type=policy_type or "")
         state.log(f"Pipeline started for query: '{query[:80]}'")
 
-        # ── Stage 1: Researcher Agent ─────────────────────────
+        # ── Stage 1: Researcher Agent
         state.stage = "researching"
         state.log("Stage 1: Invoking ResearcherAgent...")
 
@@ -199,7 +199,6 @@ class InsuranceOrchestrator:
         }
 
 
-# ── Singleton instance ────────────────────────────────────────
 _orchestrator = None
 
 def get_orchestrator() -> InsuranceOrchestrator:

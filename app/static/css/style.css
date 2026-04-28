@@ -1737,3 +1737,343 @@ footer {
     .nav-username { display: none; }
 }
 
+
+/* ============================================================
+   POLICY ANALYTICS SECTION  (index.html pie chart)
+   ============================================================ */
+
+.analytics-section {
+    padding: 0 0 6rem;
+}
+
+.analytics-card {
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    padding: 3rem;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Decorative blob */
+.analytics-card::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 240px; height: 240px;
+    background: var(--bg-sage);
+    border-radius: 60% 40% 55% 45% / 45% 55% 40% 60%;
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+/* ── Chart area (left side) ── */
+.chart-area {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.chart-wrap {
+    position: relative;
+    width: 280px;
+    height: 280px;
+}
+
+.chart-wrap canvas {
+    border-radius: 50%;
+    transition: filter 0.3s ease;
+}
+
+.chart-wrap:hover canvas { filter: drop-shadow(0 8px 24px rgba(27,42,74,0.18)); }
+
+/* Centre overlay text inside doughnut */
+.chart-center-label {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+}
+
+.chart-total-num {
+    display: block;
+    font-family: var(--font-head);
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1;
+}
+
+.chart-total-txt {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+}
+
+/* ── Legend area (right side) ── */
+.chart-legend-area {
+    flex: 1;
+}
+
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.2rem;
+    transition: all 0.22s ease;
+}
+
+.legend-item:hover {
+    transform: translateX(4px);
+    border-color: var(--border2);
+    box-shadow: var(--shadow-sm);
+}
+
+.legend-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legend-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.legend-label {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--navy);
+}
+
+.legend-meta {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.legend-count {
+    font-family: var(--font-head);
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* Empty state inside chart area */
+.chart-empty-msg {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    text-align: center;
+    padding: 2rem;
+}
+
+.chart-empty-msg i {
+    font-size: 3rem;
+    color: var(--sage-lt);
+}
+
+.chart-empty-msg p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* ── Responsive Analytics ── */
+@media (max-width: 860px) {
+    .analytics-card {
+        flex-direction: column;
+        padding: 2rem;
+        gap: 2rem;
+    }
+    .chart-wrap { width: 220px; height: 220px; }
+    .chart-total-num { font-size: 2rem; }
+}
+
+@media (max-width: 500px) {
+    .chart-wrap { width: 180px; height: 180px; }
+    .analytics-card { padding: 1.5rem; }
+}
+
+
+/* ============================================================
+   IRDAI PDF DOWNLOAD SECTION  (health / term / vehicle pages)
+   ============================================================ */
+
+.irdai-downloads {
+    background: linear-gradient(135deg, #f7f8f4 60%, var(--bg-sage-lt) 100%);
+    border: 1.5px solid var(--sage-lt);
+    border-radius: var(--radius);
+    padding: 2.2rem 2.5rem 2rem;
+    margin: 2.5rem 0 2.2rem;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle blob decoration */
+.irdai-downloads::after {
+    content: '';
+    position: absolute;
+    bottom: -50px; right: -50px;
+    width: 180px; height: 180px;
+    background: var(--bg-sage);
+    border-radius: 60% 40% 55% 45% / 45% 55% 40% 60%;
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.irdai-downloads-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.irdai-icon {
+    width: 44px; height: 44px;
+    background: var(--bg-white);
+    border: 1.5px solid var(--sage-lt);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #e53935;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.irdai-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--sage-dk);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 0.15rem;
+}
+
+.irdai-downloads-header h3 {
+    font-family: var(--font-head);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0;
+}
+
+.irdai-desc {
+    font-size: 0.88rem;
+    color: var(--text-body);
+    margin-bottom: 1.4rem;
+    line-height: 1.65;
+    max-width: 580px;
+}
+
+.irdai-pdf-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Individual PDF row */
+.pdf-download-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.3rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.pdf-download-btn:hover {
+    border-color: var(--sage-lt);
+    background: var(--bg-sage-lt);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.pdf-icon-wrap {
+    width: 40px; height: 40px;
+    background: #fef0ee;
+    border: 1px solid #f4b8ae;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #e53935;
+    flex-shrink: 0;
+}
+
+.pdf-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+}
+
+.pdf-name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.pdf-meta {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    letter-spacing: 0.2px;
+}
+
+.pdf-dl-arrow {
+    width: 34px; height: 34px;
+    background: var(--bg-sage-lt);
+    border: 1px solid var(--sage-lt);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    color: var(--sage-dk);
+    transition: all 0.22s ease;
+    flex-shrink: 0;
+}
+
+.pdf-download-btn:hover .pdf-dl-arrow {
+    background: var(--sage-dk);
+    border-color: var(--sage-dk);
+    color: #fff;
+    transform: translateY(1px);
+}
+
+/* ── Responsive IRDAI ── */
+@media (max-width: 600px) {
+    .irdai-downloads { padding: 1.6rem 1.4rem; }
+    .irdai-downloads-header h3 { font-size: 1rem; }
+    .pdf-name { font-size: 0.85rem; }
+}

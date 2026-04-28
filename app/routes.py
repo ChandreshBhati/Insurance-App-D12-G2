@@ -1,9 +1,16 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_file, abort
 from flask_login import login_required, current_user
 from .models import Policy
 from . import db
+import os
 
 main = Blueprint("main", __name__)
+
+# ── Allowed IRDAI PDFs ─────────────────────────────────────────
+ALLOWED_PDFS = {
+    "irdai-regulatory-outlook": "2026-insurance-regulatory-outlook.pdf",
+    "irdai-ind-as-circular":    "IRDAI Ind AS Circular 01.04.2026.pdf",
+}
 
 
 # ── HOME ──────────────────────────────────────────────────────
@@ -103,6 +110,47 @@ def delete_policy(id):
         flash("Error deleting policy.", "danger")
 
     return redirect(url_for("main.home"))
+
+
+# ── DOWNLOAD IRDAI PDF ────────────────────────────────────────
+@main.route("/download-pdf/<key>")
+@login_required
+def download_pdf(key):
+    filename = ALLOWED_PDFS.get(key)
+    if not filename:
+        abort(404)
+    # PDF lives in the project root (one level up from the app package)
+    project_root = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..")
+    )
+    filepath = os.path.join(project_root, filename)
+    if not os.path.isfile(filepath):
+        abort(404)
+    return send_file(filepath, as_attachment=True, download_name=filename)
+
+
+# ── API: POLICY DISTRIBUTION (Pie Chart) ─────────────────────
+@main.route("/api/policy-distribution")
+@login_required
+def policy_distribution():
+    """
+    Returns policy-type counts for the current user.
+    Used by the home-page pie chart section.
+    Response: { labels: [...], counts: [...] }
+    """
+    from sqlalchemy import func
+    rows = (
+        db.session.query(
+            Policy.policy_type,
+            func.count(Policy.id).label("cnt")
+        )
+        .filter(Policy.user_id == current_user.id)
+        .group_by(Policy.policy_type)
+        .all()
+    )
+    labels = [r.policy_type for r in rows]
+    counts = [r.cnt        for r in rows]
+    return jsonify({"labels": labels, "counts": counts})
 
 
 # ── AI STUDIO PAGE ────────────────────────────────────────────

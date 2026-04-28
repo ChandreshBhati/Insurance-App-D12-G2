@@ -108,6 +108,36 @@ INSURANCE_KNOWLEDGE = [
         ),
         "metadata": {"type": "Health Insurance", "topic": "irdai_regulations", "market": "India"}
     },
+    {
+        "id": "car_008",
+        "text": "To file a car insurance claim, you must first register the claim immediately via a 24x7 toll-free number, the IL Take Care app, or SMS [1]. You need to submit your claim by providing your policy cover note, vehicle chassis/registration number, and incident details [1]. For vehicle damage, you can complete an 'Instaspect' live video survey on the app before uploading the necessary supporting documents for assessment [1].",
+        "metadata": {"type": "Car Insurance", "topic": "claim_process", "market": "India"}
+    },
+    {
+        "id": "car_009",
+        "text": "Filing a car insurance reimbursement claim requires the original claim form with an NEFT mandate, a copy of the Registration Certificate (RC), and a copy of the driver's license at the time of the accident [2]. You must also provide a copy of the policy, a certified officially valid document with a PAN card/Form 60, garage estimate, repair invoice, cancelled cheque, and an FIR or police report if applicable [3].",
+        "metadata": {"type": "Car Insurance", "topic": "reimbursement_documents", "market": "India"}
+    },
+    {
+        "id": "car_010",
+        "text": "For total loss and net salvage car insurance claims, the required documents include the original RC, original policy schedule, and three signed copies of Form 28, 29 & 30 [2]. Additionally, you must submit an indemnity bond, PAN card copy, FIR, NEFT form with a cancelled cheque, and a No Objection Certificate (NOC) with Form 16 if the vehicle was purchased on a loan [2].",
+        "metadata": {"type": "Car Insurance", "topic": "total_loss_documents", "market": "India"}
+    },
+    {
+        "id": "car_011",
+        "text": "For extended warranty car insurance claims, you are required to submit regular service and maintenance history records [2]. You must also provide the exact reading of the Speedometer or Odometer [3].",
+        "metadata": {"type": "Car Insurance", "topic": "extended_warranty_documents", "market": "India"}
+    },
+    {
+        "id": "broker_012",
+        "text": "In India, an applicant can register as one of the following categories of insurance brokers: direct broker (life, general, or life & general), reinsurance broker, or composite broker [4]. The minimum capital requirement to act as an insurance broker is Rs. 75 Lakh for direct brokers, Rs. 4 Crore for reinsurance brokers, and Rs. 5 Crore for composite brokers [5].",
+        "metadata": {"type": "Insurance Broker", "topic": "registration_and_capital", "market": "India"}
+    },
+    {
+        "id": "broker_013",
+        "text": "Insurance brokers are required to maintain a minimum net-worth at all times, which is Rs. 50 Lakh for a direct broker and 50% of the minimum capital requirement for reinsurance and composite brokers [6]. Additionally, brokers must keep a deposit in a scheduled bank equivalent to Rs. 10 Lakhs for a direct broker, or 10% of the minimum capital for a reinsurance or composite broker, which cannot be released without the Authority's written permission [7, 8].",
+        "metadata": {"type": "Insurance Broker", "topic": "net_worth_and_deposit", "market": "India"}
+    },
 
     # ── TERM INSURANCE ────────────────────────────────────────
     {
@@ -301,6 +331,225 @@ INSURANCE_KNOWLEDGE = [
         ),
         "metadata": {"type": "General", "topic": "premium_payment", "market": "India"}
     },
+
+    # ══════════════════════════════════════════════════════════════
+    # NEW CHUNKS — IRDAI Ind AS 2026 REGULATIONS
+    # Source 1: IRDAI Circular Ref IRDAI/IFRS/CIR/MISC/45/4/2026 dated 1st April 2026
+    # Source 2: IRDAI Press Release dated 30th March 2026 — 135th Authority Meeting
+    # ══════════════════════════════════════════════════════════════
+
+    # ── HEALTH INSURANCE — IRDAI Ind AS 2026 ─────────────────
+    {
+        "id": "health_008",
+        "text": (
+            "IRDAI Ind AS financial reporting for health insurers from April 2026: "
+            "All Stand Alone Health Insurers (SAHIs) must prepare financial statements "
+            "under Indian Accounting Standards (Ind AS) from 1st April 2026, mandated by "
+            "IRDAI (Actuarial, Finance and Investment Functions of Insurers) (Amendment) Regulations 2026 "
+            "approved at the 135th Authority Meeting on 30th March 2026. "
+            "Health insurers must submit quarterly Financial Statements under Ind AS (Schedule IIA) "
+            "alongside parallel Financial Information under the existing framework (Schedule II) for two years. "
+            "First three quarters are subject to limited review by a Chartered Accountant. "
+            "Annual statements are subject to full audit under Insurance Act 1938 and Companies Act 2013."
+        ),
+        "metadata": {"type": "Health Insurance", "topic": "irdai_ind_as_2026", "market": "India"}
+    },
+    {
+        "id": "health_009",
+        "text": (
+            "IRDAI Ind AS policyholder fund segregation for health insurers — April 2026: "
+            "As per IRDAI Circular IRDAI/IFRS/CIR/MISC/45/4/2026, segregation of policyholder and "
+            "shareholder funds must continue under Section 11 of the Insurance Act 1938 "
+            "even after adoption of Ind AS by health insurers. "
+            "Health insurers must present policyholder and shareholder fund items separately in "
+            "Financial Statements under Ind AS as per Schedule IIA of the Regulations. "
+            "This ensures policyholder interests are protected and funds are not co-mingled with "
+            "shareholder capital under the new accounting framework. "
+            "Segregation must be maintained in accordance with the Master Circular on Actuarial, "
+            "Finance and Investment Functions of Insurers 2024."
+        ),
+        "metadata": {"type": "Health Insurance", "topic": "policyholder_fund_segregation", "market": "India"}
+    },
+    {
+        "id": "health_010",
+        "text": (
+            "IRDAI forbearance provision for health insurers under Ind AS 2026: "
+            "Health insurers facing transition challenges can apply for one-year forbearance "
+            "by submitting an application to IRDAI on or before 30th April 2026. "
+            "Application must include a Board-approved action plan with monthly milestones, "
+            "system readiness timelines, actuarial and finance function preparedness status, "
+            "and a governance framework for overseeing the Ind AS transition. "
+            "During forbearance, insurers must still prepare Ind AS proforma statements "
+            "(Financial Information under Schedule IIA) and submit monthly progress reports to IRDAI. "
+            "Financial Statements during forbearance period are prepared under Schedule II (existing framework). "
+            "Financial Information for all four quarters during forbearance must be subject to "
+            "limited review by a CA and certification from an Independent Actuary."
+        ),
+        "metadata": {"type": "Health Insurance", "topic": "ind_as_forbearance", "market": "India"}
+    },
+
+    # ── TERM INSURANCE — IRDAI Ind AS 2026 ───────────────────
+    {
+        "id": "term_007",
+        "text": (
+            "IRDAI Ind AS financial reporting for life and term insurers from April 2026: "
+            "All Life Insurers offering term insurance must prepare financial statements "
+            "under Indian Accounting Standards (Ind AS) effective 1st April 2026, as mandated by "
+            "IRDAI (Amendment) Regulations 2026 approved on 30th March 2026. "
+            "Term insurers must follow Ind AS 117 (Insurance Contracts) for recognition, measurement, "
+            "presentation and disclosure of insurance contract liabilities including term policies. "
+            "Discounting of insurance contract liabilities must use the risk-free rate derived from "
+            "Government of India securities zero-coupon yield curve published by CCIL "
+            "(Clearing Corporation of India Limited) or any other source specified by IRDAI."
+        ),
+        "metadata": {"type": "Term Insurance", "topic": "irdai_ind_as_2026", "market": "India"}
+    },
+    {
+        "id": "term_008",
+        "text": (
+            "IRDAI Ind AS actuarial and solvency framework for term insurance — 2026: "
+            "As per IRDAI Circular IRDAI/IFRS/CIR/MISC/45/4/2026, the adoption of Ind AS does NOT "
+            "alter the basis of actuarial investigation, determination of surplus, or solvency assessment "
+            "for life and term insurers. "
+            "Actuarial investigation and actuary report submission continues under Section 13 of the "
+            "Insurance Act 1938 and Schedule I of the Regulations. "
+            "Determination and distribution of surplus is governed by Section 49 of the Insurance Act 1938. "
+            "Solvency margin maintenance continues under Sections 64V and 64VA of the Insurance Act 1938. "
+            "Insurers must ensure that Ind AS adoption does not, by itself, alter the basis of "
+            "actuarial investigation or solvency assessment — these remain unchanged."
+        ),
+        "metadata": {"type": "Term Insurance", "topic": "ind_as_actuarial_solvency", "market": "India"}
+    },
+    {
+        "id": "term_009",
+        "text": (
+            "IRDAI parallel reporting requirement for term insurance companies — 2026: "
+            "All life insurers offering term plans must undertake parallel reporting for two years "
+            "from 1st April 2026 as per IRDAI (Amendment) Regulations 2026. "
+            "This means submitting both: "
+            "Financial Statements under Ind AS (Schedule IIA) — new framework; and "
+            "Financial Information under existing framework (Schedule II) — old framework. "
+            "Both must be submitted quarterly and disclosed on the insurer website. "
+            "For listed term insurers, SEBI timelines for Financial Statement disclosures continue to apply. "
+            "For financial year 2026-27, first three quarters must be submitted within three months "
+            "from the end of each respective quarter. "
+            "Reconciliation between Financial Statements and Financial Information must be provided per Ind AS 101."
+        ),
+        "metadata": {"type": "Term Insurance", "topic": "ind_as_parallel_reporting", "market": "India"}
+    },
+
+    # ── VEHICLE INSURANCE — IRDAI Ind AS 2026 ────────────────
+    {
+        "id": "vehicle_007",
+        "text": (
+            "IRDAI Ind AS financial reporting for general and vehicle insurers from April 2026: "
+            "All General Insurers including motor and vehicle insurance providers must prepare "
+            "financial statements under Indian Accounting Standards (Ind AS) from 1st April 2026, "
+            "per IRDAI Amendment Regulations 2026 approved at the 135th Authority Meeting on 30th March 2026. "
+            "Vehicle insurers must implement Ind AS 117 for insurance contract liabilities. "
+            "Quarterly Financial Statements (Schedule IIA — Ind AS) and Financial Information "
+            "(Schedule II — existing) must both be prepared, submitted to IRDAI, and "
+            "disclosed on the insurer website for two years (parallel reporting period). "
+            "First three quarters subject to limited review; annual statements subject to full audit."
+        ),
+        "metadata": {"type": "Vehicle Insurance", "topic": "irdai_ind_as_2026", "market": "India"}
+    },
+    {
+        "id": "vehicle_008",
+        "text": (
+            "IRDAI Ind AS investment and expense regulations for vehicle insurers — 2026: "
+            "As per IRDAI Circular IRDAI/IFRS/CIR/MISC/45/4/2026, all regulations and Master Circulars "
+            "pertaining to Investment functions, Expenses of Management, Submission of returns, and "
+            "Public Disclosures for general and vehicle insurers continue to be governed by Schedule II "
+            "of the Regulations even after Ind AS adoption. "
+            "Vehicle insurers must consistently apply Schedule II principles while complying with "
+            "investment and expense management regulatory frameworks, unless specifically modified "
+            "or clarified by the Competent Authority. "
+            "Any clarifications on Ind AS implementation can be directed to indas-team@irdai.gov.in."
+        ),
+        "metadata": {"type": "Vehicle Insurance", "topic": "ind_as_investment_expenses", "market": "India"}
+    },
+
+    # ── GENERAL INSURANCE — IRDAI Ind AS 2026 ────────────────
+    {
+        "id": "general_003",
+        "text": (
+            "IRDAI introduces Indian Accounting Standards (Ind AS) for insurance sector — 2026: "
+            "IRDAI approved the Insurance Regulatory and Development Authority of India (Actuarial, "
+            "Finance and Investment Functions of Insurers) (Amendment) Regulations 2026 at its "
+            "135th Authority Meeting on 30th March 2026. "
+            "Ind AS is mandatory for ALL categories of insurers from 1st April 2026: "
+            "Life Insurers, General Insurers, Stand Alone Health Insurers (SAHIs), and Reinsurers. "
+            "Objective: enhance consistency, transparency, and comparability in financial reporting "
+            "across the Indian insurance sector in alignment with globally accepted accounting standards. "
+            "ICAI (Institute of Chartered Accountants of India) and IAI (Institute of Actuaries of India) "
+            "have expressed readiness to support insurers and auditing professionals in this transition."
+        ),
+        "metadata": {"type": "General", "topic": "irdai_ind_as_introduction_2026", "market": "India"}
+    },
+    {
+        "id": "general_004",
+        "text": (
+            "IRDAI Ind AS Circular IRDAI/IFRS/CIR/MISC/45/4/2026 — key clarifications for all insurers: "
+            "Issued 1st April 2026 under Section 34 of the Insurance Act 1938 and Section 14 of IRDA Act 1999. "
+            "Key clarifications: "
+            "1. Financial Statements under Ind AS (Schedule IIA) are the basis of financial reporting from April 2026. "
+            "2. Parallel reporting of Ind AS statements and existing framework statements mandatory for two years. "
+            "3. Both Financial Statements and Financial Information submitted quarterly and published on insurer website. "
+            "4. First three quarters subject to limited review by CA; annual statements subject to full audit. "
+            "5. Forbearance of one year available for insurers facing transition challenges — apply by 30th April 2026. "
+            "6. Contact for Ind AS implementation clarifications: indas-team@irdai.gov.in."
+        ),
+        "metadata": {"type": "General", "topic": "irdai_ind_as_circular_2026", "market": "India"}
+    },
+    {
+        "id": "general_005",
+        "text": (
+            "IRDAI Ind AS discount rate and independent validation for insurers — 2026: "
+            "As per IRDAI Circular IRDAI/IFRS/CIR/MISC/45/4/2026: "
+            "Discounting of insurance contract liabilities must be carried out per Ind AS 117 (Insurance Contracts). "
+            "The risk-free rate for discounting shall be derived from Government of India securities "
+            "using the zero-coupon yield curve published by CCIL (Clearing Corporation of India Limited) "
+            "or any other source specified by IRDAI from time to time. "
+            "Independent validation scope: The Competent Authority in consultation with the Joint Expert Group "
+            "constituted under the Regulations will specify the scope and manner of independent validation "
+            "of processes adopted for Ind AS implementation by all insurers."
+        ),
+        "metadata": {"type": "General", "topic": "irdai_ind_as_discount_rate", "market": "India"}
+    },
+    {
+        "id": "general_006",
+        "text": (
+            "IRDAI Ind AS forbearance detailed steps for all insurers — 2026: "
+            "Insurers seeking one-year forbearance from immediate Ind AS implementation must: "
+            "Step 1: Submit application to IRDAI on or before 30th April 2026. "
+            "Step 2: Include a Board-approved action plan with the application. "
+            "Step 3: Action plan must specify monthly milestones, system and data readiness timelines, "
+            "actuarial and finance function preparedness, and governance framework for transition oversight. "
+            "Step 4: After forbearance is granted, submit monthly progress reports to IRDAI showing "
+            "milestone achievement status, key gaps identified, and remedial actions undertaken. "
+            "Step 5: During forbearance, prepare Financial Statements under Schedule II (existing framework) "
+            "AND Financial Information (Ind AS proforma) under Schedule IIA — both submitted quarterly. "
+            "Financial Information during forbearance must be reviewed by CA and certified by Independent Actuary."
+        ),
+        "metadata": {"type": "General", "topic": "irdai_ind_as_forbearance_steps", "market": "India"}
+    },
+    {
+        "id": "general_007",
+        "text": (
+            "IRDAI Ind AS transparency and policyholder protection goals — 2026: "
+            "The adoption of Ind AS by all Indian insurers from April 2026 aims to: "
+            "Enhance transparency in financial reporting across Life, General, Health, and Reinsurance sectors. "
+            "Improve credibility and regulatory oversight of insurer financial health. "
+            "Align Indian insurance financial reporting with globally accepted standards (aligned with IFRS 17). "
+            "Safeguard policyholder interests through standardised, audited financial disclosures. "
+            "Support development of a robust and globally aligned insurance ecosystem in India. "
+            "The framework was developed after extensive stakeholder consultations including public comments "
+            "on the Exposure Draft and engagement with insurers and industry professionals. "
+            "Source: IRDAI Press Release dated 30th March 2026 — 135th Authority Meeting."
+        ),
+        "metadata": {"type": "General", "topic": "irdai_ind_as_goals_2026", "market": "India"}
+    },
 ]
 
 
@@ -418,4 +667,3 @@ def initialize_knowledge_base():
         print("[RAG] Knowledge base ready.")
     except Exception as e:
         print(f"[RAG] Startup init failed: {e}")
-        
