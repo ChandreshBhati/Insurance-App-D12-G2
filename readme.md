@@ -75,15 +75,7 @@ A complete Create, Read, Update, Delete system for managing insurance policies, 
 ---
 
 ### 🤖 AI Studio — Multimodal Chat Interface
-The flagship feature of Insurance Hub — a real-time, chat-based AI interface with two distinct modes, designed to look and feel like a modern AI assistant.
-
-**Chat UI Design:**
-- Left sidebar with mode selector, quick suggestion chips, and policy type selector
-- Wide scrollable chat window with message bubbles (user right, AI left)
-- Animated typing indicator (3 bouncing dots) while AI processes
-- Persistent chat history within the session
-- Clear chat button to reset conversation
-- Mobile-friendly responsive layout
+ chat-based AI interface with two distinct modes, designed to look and feel like a modern AI assistant.
 
 **Tab 1 — Policy Explainer (Text-to-Text)**
 Powered by Groq API with Llama 3.3 70B Versatile — one of the fastest LLMs available.
@@ -91,26 +83,28 @@ Powered by Groq API with Llama 3.3 70B Versatile — one of the fastest LLMs ava
 - User types any insurance question in natural language
 - AI responds with a structured explanation including Overview, Key Benefits, Important Warning, and Premium Range — all tailored for the Indian market
 - Response appears as a chat bubble with a **Copy to clipboard** button
-- Clickable example prompt chips: *"What is cashless hospitalization?"*, *"Explain term insurance for a 28 year old"*, *"What does zero depreciation mean?"*
-- Async fetch() call — page never reloads, conversation flows naturally
 
 **Tab 2 — Risk Infographic Generator (Text-to-Image)**
-Powered by Gemini Flash Image Generation with multi-provider fallback to FLUX.1-Dev.
 
-- User selects policy type from a pill selector embedded in the input bar
 - User types a visual concept in the chat input
 - Live progress bar with real-time timer shows generation progress across 4 stages: Sending → Rendering → Encoding → Ready
 - Generated image appears as a chat bubble with a **Save Image** button for direct download
 - Images returned as base64 data URLs — no external URL expiry issues, no browser security blocks
-- Clickable example prompt chips: *"Common health risks in urban India"*, *"Life insurance claim process"*, *"Vehicle accident risk statistics"*
-
-**Async Architecture — No Page Freezes:**
-- Two dedicated REST API endpoints: `/api/explain` and `/api/generate-image`
-- Both called via JavaScript `fetch()` in the background
-- UI remains fully interactive during the 10-60 second generation process
-- Error messages appear inline in the chat if any service fails
 
 ---
+
+# RAG based integration and AGENTIC worflow
+
+- Agentic AI studio that employs three agents - orchestrator , researcher and writer agent
+- researcher agent does the research to the given query and returns a research paccket that is sent VIA **handoff** gate.
+- handoff gate verifies information and sends to writer agent.
+- Writer agent structures the output based on given prompt template and returns to user.
+- Pipeline logs and workflows are mentioned below the chat.
+- The agents take their knowldge chunks stored in knowledgeBase.py with the help of ChromaDB.
+
+
+----
+
 
 ### 🎨 Design System
 A fully custom design system built with vanilla CSS and CSS variables — no UI framework used.
@@ -123,25 +117,6 @@ A fully custom design system built with vanilla CSS and CSS variables — no UI 
 - **Flash messages:** Color-coded notifications (green for success, red for danger, yellow for warning) with icons
 
 ---
-
-### 🔌 RESTful Async API Endpoints
-Two JSON API endpoints consumed by the frontend JavaScript:
-
-| Endpoint | Method | Auth | Description |
-|---|---|---|---|
-| `/api/explain` | POST | Required | Returns AI policy explanation as JSON |
-| `/api/generate-image` | POST | Required | Returns base64 image as JSON |
-| `/add-policy` | GET/POST | Required | Create new policy |
-| `/edit/<id>` | GET/POST | Required | Update existing policy |
-| `/delete/<id>` | POST | Required | Delete policy |
-| `/health-policy` | GET | Required | Health insurance info page |
-| `/term-policy` | GET | Required | Term insurance info page |
-| `/vehicle-policy` | GET | Required | Vehicle insurance info page |
-| `/ai-studio` | GET/POST | Required | AI Studio chat interface |
-| `/register` | GET/POST | Public | User registration |
-| `/login` | GET/POST | Public | User login |
-| `/logout` | GET | Required | Logout and session clear |
-
 ---
 
 ## 🛠️ Tech Stack
@@ -274,16 +249,6 @@ http://<EC2_PUBLIC_IP>:30007
 
 ---
 
-## 🔒 Security Features
-
-- Passwords never stored in plain text — Werkzeug `generate_password_hash` with PBKDF2-SHA256
-- All routes protected with `@login_required` — unauthenticated users redirected to login
-- Policy ownership enforced on every edit/delete — cross-user data access impossible
-- Flask `SECRET_KEY` for secure session cookies
-- Database rollback on every failed transaction — no partial/corrupt writes
-- Flash message feedback on all unauthorized access attempts
-
----
 
 ## 📦 Dependencies
 
