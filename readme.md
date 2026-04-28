@@ -102,6 +102,8 @@ Powered by Groq API with Llama 3.3 70B Versatile — one of the fastest LLMs ava
 - Pipeline logs and workflows are mentioned below the chat.
 - The agents take their knowldge chunks stored in knowledgeBase.py with the help of ChromaDB.
 
+<img width="1916" height="786" alt="image" src="https://github.com/user-attachments/assets/eee9d01f-c222-437f-aef1-e75dc1de0175" />
+
 
 ----
 
@@ -270,7 +272,9 @@ google-generativeai   # Gemini image generation
 
 ## Future scope 
 
-**Target** :- Design and implement an architecture of collaborative Insurance agents featuring specialization and hand-off protocols. The system consists of a Researcher Agent dedicated to sourcing information (e.g., Policy Coverage) and a Writer Agent tasked with synthesizing and formatting the data. This project demonstrates advanced inter-agent communication, state management, and the orchestration of complex workflows to achieve high-quality, structured outputs. RAG based integration for more precise outputs catering to indian customers and market.
+**Target** :- Design and implement an architecture of collaborative Insurance agents featuring specialization and hand-off protocols.Enhancing quality of knowledgeBase and workflows to achieve high-quality, structured outputs. RAG based integration for more precise outputs catering to indian customers and market.
+secondly, Personalized User insurance recoomendation :- based on analytics of user policy We aim to connect the RAG pipeline to users policy data , from this it can help to personalize the recommendations of policies and insurers in better and structured way.
+
 
 ---
 
