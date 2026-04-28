@@ -15,7 +15,7 @@ Implement a multimodal GenAI application for Insurance concept visualization. Th
 
 **A production-grade, cloud-deployed Multimodal GenAI web application for intelligent insurance management.**
 
-[Features](#-features) · [Tech Stack](#-tech-stack) · [Project Structure](#-project-structure) · [Screenshots](#-application-walkthrough) · [Deployment](#-deployment)
+[Features](##-features) · [Tech Stack](##-tech-stack) · [Deployment](#-deployment)
 
 </div>
 
