@@ -49,8 +49,8 @@ A complete Create, Read, Update, Delete system for managing insurance policies, 
 - Displays all policies belonging to the logged-in user in a clean, sortable table
 - Shows policy type, customer name, email, premium amount, and creation date
 - Newest policies appear first (ordered by ID descending)
-- Empty state with a friendly call-to-action when no policies exist
-- Flash message notifications for every action (add, edit, delete)
+- Empty state with a friendly call-to-action when no policies exist.
+- Analytics chart based on user policies.
 
 **Add Policy**
 - Clean form card with dropdown for policy type selection (Health / Term / Vehicle)
@@ -61,25 +61,16 @@ A complete Create, Read, Update, Delete system for managing insurance policies, 
 **Edit Policy**
 - Pre-populated form with existing policy data for easy modification
 - Same validation rules as add policy
-- Ownership check before allowing edits — unauthorized users redirected with error
 
 **Delete Policy**
 - One-click delete with ownership verification
-- Database transaction with rollback on failure
-- Immediate dashboard refresh with confirmation message
 
 ---
 
-### 🏥 Interactive Policy Information Pages
-Three dedicated pages — one each for Health, Term, and Vehicle insurance — featuring rich, interactive information cards that educate users about their coverage options.
+## ER diagram
 
-**Each page includes:**
-- **4 interactive information cards** covering Terms & Conditions, Key Benefits, Smart Tips, and Provider Comparison
-- **Provider comparison table** with real Indian insurers (Star Health, HDFC Life, Tata AIG etc.) showing claim settlement ratios, network size, and premium ranges
-- **Hover animations** on cards with smooth CSS transitions
-- **Benefit lists** with icon-prefixed bullet points
-- **Smart tips section** with actionable advice for Indian customers
-- Consistent design language matching the overall application theme
+<img width="1226" height="701" alt="Screenshot 2026-04-23 215738" src="https://github.com/user-attachments/assets/c9a80ecb-9ee0-4e55-b0e2-a04451eb6ead" />
+
 
 ---
 
