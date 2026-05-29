@@ -15,7 +15,7 @@ Implement a multimodal GenAI application for Insurance concept visualization. Th
 
 **A production-grade, cloud-deployed Multimodal GenAI web application for intelligent insurance management.**
 
-[Features](#-features) · [Tech Stack](#-tech-stack) · [Project Structure](#-project-structure) · [Screenshots](#-application-walkthrough) · [Deployment](#-deployment)
+[Features](##-features) · [Tech Stack](##-tech-stack) · [Deployment](#-deployment)
 
 </div>
 
@@ -49,8 +49,8 @@ A complete Create, Read, Update, Delete system for managing insurance policies, 
 - Displays all policies belonging to the logged-in user in a clean, sortable table
 - Shows policy type, customer name, email, premium amount, and creation date
 - Newest policies appear first (ordered by ID descending)
-- Empty state with a friendly call-to-action when no policies exist
-- Flash message notifications for every action (add, edit, delete)
+- Empty state with a friendly call-to-action when no policies exist.
+- Analytics chart based on user policies.
 
 **Add Policy**
 - Clean form card with dropdown for policy type selection (Health / Term / Vehicle)
@@ -61,38 +61,21 @@ A complete Create, Read, Update, Delete system for managing insurance policies, 
 **Edit Policy**
 - Pre-populated form with existing policy data for easy modification
 - Same validation rules as add policy
-- Ownership check before allowing edits — unauthorized users redirected with error
 
 **Delete Policy**
 - One-click delete with ownership verification
-- Database transaction with rollback on failure
-- Immediate dashboard refresh with confirmation message
 
 ---
 
-### 🏥 Interactive Policy Information Pages
-Three dedicated pages — one each for Health, Term, and Vehicle insurance — featuring rich, interactive information cards that educate users about their coverage options.
+## ER diagram
 
-**Each page includes:**
-- **4 interactive information cards** covering Terms & Conditions, Key Benefits, Smart Tips, and Provider Comparison
-- **Provider comparison table** with real Indian insurers (Star Health, HDFC Life, Tata AIG etc.) showing claim settlement ratios, network size, and premium ranges
-- **Hover animations** on cards with smooth CSS transitions
-- **Benefit lists** with icon-prefixed bullet points
-- **Smart tips section** with actionable advice for Indian customers
-- Consistent design language matching the overall application theme
+<img width="1226" height="701" alt="Screenshot 2026-04-23 215738" src="https://github.com/user-attachments/assets/c9a80ecb-9ee0-4e55-b0e2-a04451eb6ead" />
+
 
 ---
 
 ### 🤖 AI Studio — Multimodal Chat Interface
-The flagship feature of Insurance Hub — a real-time, chat-based AI interface with two distinct modes, designed to look and feel like a modern AI assistant.
-
-**Chat UI Design:**
-- Left sidebar with mode selector, quick suggestion chips, and policy type selector
-- Wide scrollable chat window with message bubbles (user right, AI left)
-- Animated typing indicator (3 bouncing dots) while AI processes
-- Persistent chat history within the session
-- Clear chat button to reset conversation
-- Mobile-friendly responsive layout
+ chat-based AI interface with two distinct modes, designed to look and feel like a modern AI assistant.
 
 **Tab 1 — Policy Explainer (Text-to-Text)**
 Powered by Groq API with Llama 3.3 70B Versatile — one of the fastest LLMs available.
@@ -100,26 +83,30 @@ Powered by Groq API with Llama 3.3 70B Versatile — one of the fastest LLMs ava
 - User types any insurance question in natural language
 - AI responds with a structured explanation including Overview, Key Benefits, Important Warning, and Premium Range — all tailored for the Indian market
 - Response appears as a chat bubble with a **Copy to clipboard** button
-- Clickable example prompt chips: *"What is cashless hospitalization?"*, *"Explain term insurance for a 28 year old"*, *"What does zero depreciation mean?"*
-- Async fetch() call — page never reloads, conversation flows naturally
 
 **Tab 2 — Risk Infographic Generator (Text-to-Image)**
-Powered by Gemini Flash Image Generation with multi-provider fallback to FLUX.1-Dev.
 
-- User selects policy type from a pill selector embedded in the input bar
 - User types a visual concept in the chat input
 - Live progress bar with real-time timer shows generation progress across 4 stages: Sending → Rendering → Encoding → Ready
 - Generated image appears as a chat bubble with a **Save Image** button for direct download
 - Images returned as base64 data URLs — no external URL expiry issues, no browser security blocks
-- Clickable example prompt chips: *"Common health risks in urban India"*, *"Life insurance claim process"*, *"Vehicle accident risk statistics"*
-
-**Async Architecture — No Page Freezes:**
-- Two dedicated REST API endpoints: `/api/explain` and `/api/generate-image`
-- Both called via JavaScript `fetch()` in the background
-- UI remains fully interactive during the 10-60 second generation process
-- Error messages appear inline in the chat if any service fails
 
 ---
+
+# RAG based integration and AGENTIC worflow
+
+- Agentic AI studio that employs three agents - orchestrator , researcher and writer agent
+- researcher agent does the research to the given query and returns a research paccket that is sent VIA **handoff** gate.
+- handoff gate verifies information and sends to writer agent.
+- Writer agent structures the output based on given prompt template and returns to user.
+- Pipeline logs and workflows are mentioned below the chat.
+- The agents take their knowldge chunks stored in knowledgeBase.py with the help of ChromaDB.
+
+<img width="1916" height="786" alt="image" src="https://github.com/user-attachments/assets/eee9d01f-c222-437f-aef1-e75dc1de0175" />
+
+
+----
+
 
 ### 🎨 Design System
 A fully custom design system built with vanilla CSS and CSS variables — no UI framework used.
@@ -132,25 +119,6 @@ A fully custom design system built with vanilla CSS and CSS variables — no UI 
 - **Flash messages:** Color-coded notifications (green for success, red for danger, yellow for warning) with icons
 
 ---
-
-### 🔌 RESTful Async API Endpoints
-Two JSON API endpoints consumed by the frontend JavaScript:
-
-| Endpoint | Method | Auth | Description |
-|---|---|---|---|
-| `/api/explain` | POST | Required | Returns AI policy explanation as JSON |
-| `/api/generate-image` | POST | Required | Returns base64 image as JSON |
-| `/add-policy` | GET/POST | Required | Create new policy |
-| `/edit/<id>` | GET/POST | Required | Update existing policy |
-| `/delete/<id>` | POST | Required | Delete policy |
-| `/health-policy` | GET | Required | Health insurance info page |
-| `/term-policy` | GET | Required | Term insurance info page |
-| `/vehicle-policy` | GET | Required | Vehicle insurance info page |
-| `/ai-studio` | GET/POST | Required | AI Studio chat interface |
-| `/register` | GET/POST | Public | User registration |
-| `/login` | GET/POST | Public | User login |
-| `/logout` | GET | Required | Logout and session clear |
-
 ---
 
 ## 🛠️ Tech Stack
@@ -283,16 +251,6 @@ http://<EC2_PUBLIC_IP>:30007
 
 ---
 
-## 🔒 Security Features
-
-- Passwords never stored in plain text — Werkzeug `generate_password_hash` with PBKDF2-SHA256
-- All routes protected with `@login_required` — unauthenticated users redirected to login
-- Policy ownership enforced on every edit/delete — cross-user data access impossible
-- Flask `SECRET_KEY` for secure session cookies
-- Database rollback on every failed transaction — no partial/corrupt writes
-- Flash message feedback on all unauthorized access attempts
-
----
 
 ## 📦 Dependencies
 
@@ -314,7 +272,9 @@ google-generativeai   # Gemini image generation
 
 ## Future scope 
 
-**Target** :- Design and implement an architecture of collaborative Insurance agents featuring specialization and hand-off protocols. The system consists of a Researcher Agent dedicated to sourcing information (e.g., Policy Coverage) and a Writer Agent tasked with synthesizing and formatting the data. This project demonstrates advanced inter-agent communication, state management, and the orchestration of complex workflows to achieve high-quality, structured outputs. RAG based integration for more precise outputs catering to indian customers and market.
+**Target** :- Design and implement an architecture of collaborative Insurance agents featuring specialization and hand-off protocols.Enhancing quality of knowledgeBase and workflows to achieve high-quality, structured outputs. RAG based integration for more precise outputs catering to indian customers and market.
+secondly, Personalized User insurance recoomendation :- based on analytics of user policy We aim to connect the RAG pipeline to users policy data , from this it can help to personalize the recommendations of policies and insurers in better and structured way.
+
 
 ---
 
