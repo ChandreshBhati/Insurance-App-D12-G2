@@ -168,6 +168,14 @@ def agent_ui():
     return render_template("agent_ui.html")
 
 
+# ── RENEWAL FLOWCHART PAGE ────────────────────────────────────
+# Interactive 3D step-by-step renewal process visualization
+@main.route("/renewal-flowchart")
+@login_required
+def renewal_flowchart():
+    return render_template("renewal_flowchart.html")
+
+
 # ═══════════════════════════════════════════════════════════════
 # JSON API ENDPOINTS
 # ═══════════════════════════════════════════════════════════════

@@ -51,6 +51,11 @@
                 <i class="fa-solid fa-robot" style="font-size:0.78rem;margin-right:0.3rem;"></i>AI Agents
             </a>
 
+            <!-- Renewal Flowchart pill button (teal) -->
+            <a href="{{ url_for('main.renewal_flowchart') }}" class="nav-renewal-btn">
+                <i class="fa-solid fa-diagram-project" style="font-size:0.78rem;margin-right:0.3rem;"></i>Renewal Flow
+            </a>
+
         {% else %}
 
             <a href="{{ url_for('auth.login') }}"    class="nav-login-btn">Sign In</a>
@@ -91,6 +96,9 @@
                 </a>
                 <a href="{{ url_for('main.agent_ui') }}" class="dropdown-item">
                     <i class="fa-solid fa-robot"></i> AI Agents
+                </a>
+                <a href="{{ url_for('main.renewal_flowchart') }}" class="dropdown-item">
+                    <i class="fa-solid fa-diagram-project"></i> Renewal Flow
                 </a>
 
                 <div class="dropdown-divider"></div>
@@ -207,6 +215,26 @@ document.addEventListener('click', function(e) {
     background: #dde1ff !important;
     border-color: #3b4fd8 !important;
     color: #3b4fd8 !important;
+}
+
+/* Renewal Flowchart pill — teal */
+.nav-renewal-btn {
+    font-weight: 600 !important;
+    color: #0f766e !important;
+    background: #ccfbf1 !important;
+    border: 1px solid #99f6e4 !important;
+    border-radius: 100px !important;
+    padding: 0.38rem 1rem !important;
+    font-size: 0.88rem !important;
+    text-decoration: none;
+    transition: all 0.2s ease !important;
+    display: inline-flex;
+    align-items: center;
+}
+.nav-renewal-btn:hover {
+    background: #99f6e4 !important;
+    border-color: #0f766e !important;
+    color: #0f766e !important;
 }
 
 /* Flash close button reset */

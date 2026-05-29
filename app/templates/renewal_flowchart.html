@@ -1,0 +1,563 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ── PAGE ── */
+.rf-page { padding: 2rem 3rem 4rem; max-width: 1200px; margin: 0 auto; }
+
+/* ── HERO ── */
+.rf-hero { text-align: center; padding: 2rem 1rem 1.5rem; }
+.rf-hero h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.6rem); color:var(--navy); margin-bottom:0.5rem; }
+.rf-hero h1 span { color:#16a34a; }
+.rf-hero p { color:#64748b; font-size:1rem; max-width:520px; margin:0 auto; }
+
+/* ── SELECTOR ── */
+.rf-selector { display:flex; justify-content:center; gap:1rem; margin:2rem 0; flex-wrap:wrap; }
+.rf-sel-btn {
+    display:flex; align-items:center; gap:0.6rem;
+    padding:0.8rem 1.6rem; border-radius:60px;
+    border:2px solid #e2e8f0; background:#fff;
+    cursor:pointer; font-size:0.93rem; font-weight:600;
+    color:#64748b; transition:all 0.3s cubic-bezier(.34,1.56,.64,1);
+    box-shadow:0 2px 10px rgba(0,0,0,.06); font-family:'DM Sans',sans-serif;
+}
+.rf-sel-btn:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.12); }
+.rf-sel-btn.sel-health  { background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; border-color:#16a34a; box-shadow:0 6px 20px rgba(34,197,94,.35); transform:translateY(-3px); }
+.rf-sel-btn.sel-term    { background:linear-gradient(135deg,#1b2a4a,#2d4a8a); color:#fff; border-color:#1b2a4a; box-shadow:0 6px 20px rgba(27,42,74,.35);  transform:translateY(-3px); }
+.rf-sel-btn.sel-vehicle { background:linear-gradient(135deg,#f59e0b,#d97706); color:#fff; border-color:#d97706; box-shadow:0 6px 20px rgba(245,158,11,.35); transform:translateY(-3px); }
+
+/* ── CANVAS WRAPPER ── */
+.rf-canvas-wrap {
+    position:relative;
+    background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f172a 100%);
+    border-radius:22px; overflow:hidden; height:500px;
+    box-shadow:0 25px 60px rgba(0,0,0,.35);
+    border:1px solid rgba(255,255,255,.06);
+    cursor:pointer;
+}
+#rf-canvas { position:absolute; top:0; left:0; width:100%; height:100%; }
+
+.rf-canvas-hint {
+    position:absolute; bottom:1rem; left:50%; transform:translateX(-50%);
+    color:rgba(255,255,255,.35); font-size:0.75rem; letter-spacing:.12em;
+    text-transform:uppercase; pointer-events:none; z-index:5;
+    font-family:'DM Sans',sans-serif;
+}
+.rf-canvas-title {
+    position:absolute; top:1rem; left:50%; transform:translateX(-50%);
+    color:rgba(255,255,255,.4); font-size:0.72rem; letter-spacing:.16em;
+    text-transform:uppercase; pointer-events:none; z-index:5;
+    font-family:'DM Sans',sans-serif; white-space:nowrap;
+}
+
+/* HTML OVERLAY LABELS (NUMBERS ON SPHERES) */
+#labels-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 10;
+}
+.node-label {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 800;
+    font-size: 1.6rem;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    pointer-events: none;
+    will-change: transform, left, top;
+}
+
+/* ── POP-UP CARD ── */
+#rf-popup {
+    display:none;
+    position:absolute; z-index:20;
+    background:#fff; border-radius:16px;
+    padding:1.2rem 1.4rem;
+    width:280px;
+    box-shadow:0 20px 50px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.1);
+    pointer-events:none;
+    transform:scale(0.7) translateY(10px);
+    opacity:0;
+    transition:transform .22s cubic-bezier(.34,1.56,.64,1), opacity .18s ease;
+}
+#rf-popup.pop-show {
+    display:block;
+    transform:scale(1) translateY(0);
+    opacity:1;
+}
+#rf-popup .pop-num {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border-radius:10px;
+    font-weight:800; font-size:0.88rem; color:#fff;
+    margin-bottom:0.65rem;
+}
+#rf-popup .pop-title {
+    font-weight:700; font-size:0.95rem; color:#1b2a4a;
+    margin-bottom:0.4rem; line-height:1.3;
+}
+#rf-popup .pop-desc {
+    font-size:0.85rem; color:#64748b; line-height:1.5; margin:0;
+}
+
+/* ── TIPS SECTION BELOW ── */
+.rf-tips-section { margin-top:3rem; }
+.rf-tips-header { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+.rf-tips-header h2 { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--navy); margin:0; }
+
+.rf-tips-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.2rem; }
+.rf-tip-card {
+    background:#fff; border-radius:14px; padding:1.4rem 1.5rem;
+    border:1.5px solid #e8f0fe; box-shadow:0 3px 12px rgba(0,0,0,.06);
+    display:flex; gap:1rem; align-items:flex-start;
+    opacity:0; transform:translateY(16px);
+    animation:sfadeIn .38s ease forwards;
+    transition:transform .22s, box-shadow .22s;
+}
+.rf-tip-card:hover { transform:translateY(-4px); box-shadow:0 10px 28px rgba(0,0,0,.12); }
+@keyframes sfadeIn { to { opacity:1; transform:translateY(0); } }
+.rf-tip-card:nth-child(1){animation-delay:.04s}
+.rf-tip-card:nth-child(2){animation-delay:.09s}
+.rf-tip-card:nth-child(3){animation-delay:.14s}
+.rf-tip-card:nth-child(4){animation-delay:.19s}
+
+.rf-tip-icon {
+    font-size:1.4rem; color:#f59e0b; flex-shrink:0;
+    margin-top:0.1rem;
+}
+.rf-tip-body h4 { font-size:0.95rem; font-weight:700; color:#1b2a4a; margin:0 0 0.4rem; }
+.rf-tip-body p  { font-size:0.85rem; color:#64748b; margin:0; line-height:1.5; }
+
+/* ── CTA ── */
+.rf-cta { display:flex; gap:1rem; margin-top:2.5rem; flex-wrap:wrap; justify-content:center; }
+@media(max-width:700px){
+    .rf-page{padding:1rem 1rem 3rem;}
+    .rf-canvas-wrap{height:360px;}
+}
+</style>
+
+<div class="rf-page">
+
+    <!-- HERO -->
+    <div class="rf-hero">
+        <div class="hero-badge" style="display:inline-flex;margin-bottom:0.9rem;">
+            <span class="badge-dot"></span> Interactive 3D Renewal Guide
+        </div>
+        <h1>Policy <span>Renewal Flowchart</span></h1>
+        <p>Hover over or click a numbered sphere to view the corresponding renewal step details.</p>
+    </div>
+
+    <!-- SELECTOR -->
+    <div class="rf-selector">
+        <button class="rf-sel-btn" id="btn-health"   onclick="selectPolicy('health')">
+            <i class="fa-solid fa-heart-pulse"></i> Health Insurance
+        </button>
+        <button class="rf-sel-btn" id="btn-term"     onclick="selectPolicy('term')">
+            <i class="fa-solid fa-shield-halved"></i> Term Insurance
+        </button>
+        <button class="rf-sel-btn" id="btn-vehicle"  onclick="selectPolicy('vehicle')">
+            <i class="fa-solid fa-car-side"></i> Vehicle Insurance
+        </button>
+    </div>
+
+    <!-- 3D CANVAS + POPUP -->
+    <div class="rf-canvas-wrap" id="rfCanvasWrap">
+        <div class="rf-canvas-title" id="rfCanvasTitle">← Select a policy type above →</div>
+        <canvas id="rf-canvas"></canvas>
+        <div id="labels-container"></div>
+        <!-- POP-UP -->
+        <div id="rf-popup">
+            <div class="pop-num"  id="popNum">1</div>
+            <div class="pop-title" id="popTitle"></div>
+            <p   class="pop-desc"  id="popDesc"></p>
+        </div>
+        <div class="rf-canvas-hint">Hover or click nodes for details</div>
+    </div>
+
+    <!-- TIPS SECTION (REPLACES STEPS GRID) -->
+    <div class="rf-tips-section">
+        <div class="rf-tips-header">
+            <h2 id="rfTipsTitle">Important Renewal Tips</h2>
+        </div>
+        <div class="rf-tips-grid" id="rfTipsGrid">
+            <!-- Tips will be injected here -->
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="rf-cta">
+        <a href="{{ url_for('main.add_policy') }}" class="primary-btn">
+            <i class="fa fa-plus"></i> Add a Policy
+        </a>
+        <a href="{{ url_for('main.home') }}" class="ghost-btn">
+            <i class="fa fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+</div>
+
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════
+   STEP DATA & TIPS
+═══════════════════════════════════════════════ */
+const POLICY_DATA = {
+    health: {
+        label: "Health Insurance Renewal — 3D View",
+        colorHex: "#22c55e",
+        colorInt: 0x22c55e,
+        gradient: "linear-gradient(135deg,#22c55e,#16a34a)",
+        selClass: "sel-health",
+        steps: [
+            { title: "Receive Renewal Notice",       desc: "Insurer sends a renewal notice 45 days before policy expiry via email, SMS, or app notification." },
+            { title: "Review Current Coverage",      desc: "Assess if the current sum insured is adequate. Medical inflation runs ~10% per year — consider upgrading." },
+            { title: "Health Declaration Update",    desc: "Re-declare any new medical conditions, surgeries, or PEDs diagnosed during the policy year." },
+            { title: "Premium Recalculation",        desc: "Insurer adjusts premium based on your age, claims filed, NCB earned, and any new riders selected." },
+            { title: "Choose Add-Ons / Riders",      desc: "Optionally add OPD cover, critical illness rider, maternity benefit, or a super top-up at renewal." },
+            { title: "Pay Renewal Premium",          desc: "Pay online via UPI, net banking, debit/credit card or offline via cheque before the 30-day grace period ends." },
+            { title: "Receive New Policy Document",  desc: "Updated policy certificate emailed within 24–48 hrs. NCB percentage updated in the new document." }
+        ],
+        tips: [
+            { title: "Don't Miss the Grace Period", desc: "You usually have a 30-day grace period to pay. If missed, you lose accumulated benefits like waiting periods." },
+            { title: "Reassess the Sum Insured", desc: "Healthcare costs rise constantly. Consider boosting coverage or adding a Super Top-Up plan." },
+            { title: "Review NCB (No Claim Bonus)", desc: "Ensure your NCB is applied correctly if you haven't made a claim in the previous year." },
+            { title: "Check Network Hospitals", desc: "Hospital tie-ups can change. Ensure your preferred hospitals are still on the cashless network list." }
+        ]
+    },
+    term: {
+        label: "Term Insurance Renewal — 3D View",
+        colorHex: "#3b82f6",
+        colorInt: 0x3b82f6,
+        gradient: "linear-gradient(135deg,#1b2a4a,#2d4a8a)",
+        selClass: "sel-term",
+        steps: [
+            { title: "60-Day Renewal Notice",          desc: "IRDAI mandates insurers send renewal notices 60 days in advance. Check for rider expiry separately." },
+            { title: "Verify Nominee Details",         desc: "Confirm nominee name, relationship, and bank details are up to date — critical for claim settlement." },
+            { title: "Medical Re-evaluation",          desc: "Insurers may require a fresh medical test if you are above 45 years or if sum assured exceeds ₹50 lakh." },
+            { title: "Premium Revision Check",         desc: "Level-premium plans charge the same rate; increasing-premium plans add an age-based step-up each year." },
+            { title: "Pay & Get Receipt",              desc: "Pay via net banking or the insurer's portal. Grace period is 30 days; policy lapses beyond that." },
+            { title: "Policy Continuation Confirmed", desc: "Coverage continues seamlessly. Keep the soft-copy receipt and updated schedule in DigiLocker." }
+        ],
+        tips: [
+            { title: "Set Auto-Pay", desc: "Term policies lapse easily if forgotten. Setup an ECS mandate or Auto-Pay to never miss a due date." },
+            { title: "Update Nominee Information", desc: "Life events like marriage or birth of a child should prompt you to review your listed nominees." },
+            { title: "Tax Deduction Reminder", desc: "Keep your renewal receipt handy to claim Section 80C tax deductions on your premium payment." }
+        ]
+    },
+    vehicle: {
+        label: "Vehicle Insurance Renewal — 3D View",
+        colorHex: "#f59e0b",
+        colorInt: 0xf59e0b,
+        gradient: "linear-gradient(135deg,#f59e0b,#d97706)",
+        selClass: "sel-vehicle",
+        steps: [
+            { title: "Expiry Alert (30 Days Prior)",     desc: "Insurer / app alerts you 30 days before OD + TP policy expires. Driving without valid insurance is illegal." },
+            { title: "Vehicle Inspection (If Lapsed)",   desc: "If the policy lapsed over 90 days, a physical inspection is mandatory before renewal." },
+            { title: "NCB Verification",                 desc: "Confirm NCB slab: 20% (1 yr) → 25% → 35% → 45% → 50% (5 yr). Protects your discount." },
+            { title: "Select Add-Ons",                   desc: "Choose zero-dep, engine protect, consumables cover, tyre protect, or 24×7 roadside assistance." },
+            { title: "Set IDV (Insured Declared Value)", desc: "IDV = current market value of vehicle. Higher IDV means higher premium but better claim payout." },
+            { title: "Pay Premium Online",               desc: "Instant digital payment activates the policy within minutes. Avoid any gap between old and new policy." },
+            { title: "Download Policy & RC Copy",        desc: "Save digital policy copy on DigiLocker and mobile — mandatory for traffic police verification." }
+        ],
+        tips: [
+            { title: "Renew Before Expiry", desc: "A lapsed policy requires physical vehicle inspection and risks losing your No Claim Bonus (NCB)." },
+            { title: "Set the Right IDV", desc: "Do not artificially lower the Insured Declared Value to reduce premium; it reduces your claim payout in total loss." },
+            { title: "Add Zero Depreciation", desc: "If your car is under 5 years old, a 'Zero Dep' add-on ensures you get full claim without deduction for part aging." },
+            { title: "Preserve Your NCB", desc: "If you switch insurers, get an NCB retention letter to carry over your discount to the new policy." }
+        ]
+    }
+};
+
+/* ═══════════════════════════════════════════════
+   THREE.JS SETUP
+═══════════════════════════════════════════════ */
+const canvas   = document.getElementById('rf-canvas');
+const wrap     = document.getElementById('rfCanvasWrap');
+const labelsContainer = document.getElementById('labels-container');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setClearColor(0x000000, 0);
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(50, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
+camera.position.set(0, 0, 14);
+
+// Lights
+scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+const dir = new THREE.DirectionalLight(0xffffff, 1.4);
+dir.position.set(5, 8, 6);
+scene.add(dir);
+const ptLight = new THREE.PointLight(0x22c55e, 2, 40);
+ptLight.position.set(-4, 3, 5);
+scene.add(ptLight);
+
+const nodeGroup = new THREE.Group();
+const lineGroup = new THREE.Group();
+scene.add(nodeGroup, lineGroup);
+
+let nodeMeshes  = [];   // clickable spheres (one per step)
+let animT       = 0;
+let activeData  = null;
+
+// ── Resize handler ──
+function resizeRenderer() {
+    const w = wrap.clientWidth, h = wrap.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resizeRenderer);
+
+/* ── Clear scene ── */
+function clearScene() {
+    nodeGroup.clear();
+    lineGroup.clear();
+    nodeMeshes = [];
+    labelsContainer.innerHTML = '';
+    hidePopup();
+}
+
+/* ── Build 3D nodes for a policy ── */
+function buildNodes(steps, colorInt, colorHex) {
+    const count       = steps.length;
+    const ringRadius  = 4.5;
+    const angleOffset = -Math.PI / 2;   // start at top
+
+    steps.forEach((step, i) => {
+        const angle = angleOffset + (i / count) * Math.PI * 2;
+        const x     = Math.cos(angle) * ringRadius;
+        const y     = Math.sin(angle) * ringRadius * 0.58;  // slight oval
+        const z     = (Math.random() - 0.5) * 0.8;
+
+        // ── Sphere ──
+        const geo = new THREE.SphereGeometry(0.72, 32, 32);
+        // Changed to solid, not transparent, so it's fully visible
+        const mat = new THREE.MeshPhongMaterial({
+            color:            colorInt,
+            emissive:         colorInt,
+            emissiveIntensity: 0.15,
+            shininess:        80
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(x, y, z);
+        mesh.userData = {
+            idx:    i,
+            baseY:  y,
+            baseZ:  z,
+            phase:  i * 0.9,
+            step:   step,
+            color:  colorHex,
+            grad:   activeData ? activeData.gradient : ''
+        };
+        nodeGroup.add(mesh);
+        nodeMeshes.push(mesh);
+
+        // ── Thin torus ring ──
+        const rGeo = new THREE.TorusGeometry(0.88, 0.04, 12, 60);
+        const rMat = new THREE.MeshPhongMaterial({ color: colorInt, transparent: true, opacity: 0.5 });
+        const ring = new THREE.Mesh(rGeo, rMat);
+        ring.position.set(x, y, z);
+        ring.rotation.x = Math.PI / 2;
+        nodeGroup.add(ring);
+        
+        // ── HTML Label ──
+        const label = document.createElement('div');
+        label.className = 'node-label';
+        label.id = 'label-' + i;
+        label.textContent = (i + 1);
+        labelsContainer.appendChild(label);
+    });
+
+    // ── Connector lines (sequential) ──
+    for (let i = 0; i < count; i++) {
+        const a = nodeMeshes[i];
+        const b = nodeMeshes[(i + 1) % count];
+        const pts  = [a.position.clone(), b.position.clone()];
+        const lGeo = new THREE.BufferGeometry().setFromPoints(pts);
+        const lMat = new THREE.LineBasicMaterial({ color: colorInt, transparent: true, opacity: 0.4 });
+        lineGroup.add(new THREE.Line(lGeo, lMat));
+    }
+
+    // ── Central octahedron hub ──
+    const hGeo = new THREE.OctahedronGeometry(0.55, 0);
+    const hMat = new THREE.MeshPhongMaterial({
+        color: 0xffffff, emissive: colorInt,
+        emissiveIntensity: 0.8, transparent: true, opacity: 0.9
+    });
+    const hub = new THREE.Mesh(hGeo, hMat);
+    hub.userData = { isHub: true };
+    nodeGroup.add(hub);
+}
+
+/* ═══════════════════════════════════════════════
+   ANIMATION LOOP
+═══════════════════════════════════════════════ */
+function animate() {
+    requestAnimationFrame(animate);
+    animT += 0.012;
+
+    nodeGroup.rotation.y = animT * 0.15;
+    nodeGroup.rotation.x = Math.sin(animT * 0.06) * 0.10;
+
+    // Float each node independently and update label position
+    nodeMeshes.forEach((m, i) => {
+        m.position.y = m.userData.baseY + Math.sin(animT + m.userData.phase) * 0.18;
+        m.position.z = m.userData.baseZ + Math.cos(animT * 0.65 + m.userData.phase) * 0.10;
+        
+        // Project 3D position to 2D screen coordinates
+        const pos = m.position.clone();
+        m.localToWorld(pos);
+        pos.project(camera);
+        
+        const x = (pos.x * 0.5 + 0.5) * wrap.clientWidth;
+        const y = (pos.y * -0.5 + 0.5) * wrap.clientHeight;
+        
+        const label = document.getElementById('label-' + i);
+        if (label) {
+            label.style.left = x + 'px';
+            label.style.top = y + 'px';
+            // Scale label slightly based on z-depth
+            const scale = (1 - pos.z) * 1.2;
+            label.style.transform = `translate(-50%, -50%) scale(${scale})`;
+            // Hide if behind the hub
+            label.style.opacity = (pos.z > 0.95) ? 0 : 1; 
+        }
+    });
+
+    // Hub spin
+    const hub = nodeGroup.children.find(c => c.userData.isHub);
+    if (hub) { hub.rotation.y = animT * 1.3; hub.rotation.x = animT * 0.55; }
+
+    renderer.render(scene, camera);
+}
+
+/* ═══════════════════════════════════════════════
+   POPUP LOGIC
+═══════════════════════════════════════════════ */
+const popup    = document.getElementById('rf-popup');
+const popNum   = document.getElementById('popNum');
+const popTitle = document.getElementById('popTitle');
+const popDesc  = document.getElementById('popDesc');
+let   popOpen  = false;
+let   hoveredMesh = null;
+
+function showPopup(mesh, screenX, screenY) {
+    if (hoveredMesh === mesh) return; // Already showing for this mesh
+    if (hoveredMesh) hoveredMesh.scale.set(1, 1, 1); // Reset previous
+    hoveredMesh = mesh;
+    
+    const step = mesh.userData.step;
+    const idx  = mesh.userData.idx;
+    const grad = activeData ? activeData.gradient : '#22c55e';
+
+    popNum.style.background = grad;
+    popNum.textContent       = idx + 1;
+    popTitle.textContent     = step.title;
+    popDesc.textContent      = step.desc;
+
+    // Position inside canvas wrap (offset to not cover mouse)
+    const wRect = wrap.getBoundingClientRect();
+    let   left  = screenX - wRect.left + 20; 
+    let   top   = screenY - wRect.top - 50;  
+
+    // Clamp to wrap bounds
+    left = Math.max(8, Math.min(left, wRect.width  - 290));
+    top  = Math.max(8, Math.min(top,  wRect.height - 180));
+
+    popup.style.left = left + 'px';
+    popup.style.top  = top  + 'px';
+    popup.style.display = 'block';
+
+    // Force reflow then animate
+    void popup.offsetWidth;
+    popup.classList.add('pop-show');
+    popOpen = true;
+
+    // Scale-bounce the sphere
+    mesh.scale.set(1.3, 1.3, 1.3);
+}
+
+function hidePopup() {
+    if (!popOpen) return;
+    popup.classList.remove('pop-show');
+    popOpen = false;
+    setTimeout(() => { if (!popOpen) popup.style.display = 'none'; }, 200);
+    
+    if (hoveredMesh) {
+        hoveredMesh.scale.set(1, 1, 1);
+        hoveredMesh = null;
+    }
+}
+
+// Hover/Click interaction using Raycaster
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+function handleInteraction(e) {
+    if (!nodeMeshes.length) return;
+
+    const rect  = canvas.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left)  / rect.width)  *  2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) *  2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const hits = raycaster.intersectObjects(nodeMeshes, false);
+
+    if (hits.length > 0) {
+        wrap.style.cursor = 'pointer';
+        showPopup(hits[0].object, e.clientX, e.clientY);
+    } else {
+        wrap.style.cursor = 'default';
+        hidePopup();
+    }
+}
+
+wrap.addEventListener('mousemove', handleInteraction);
+wrap.addEventListener('click', handleInteraction);
+wrap.addEventListener('mouseleave', hidePopup);
+
+/* ═══════════════════════════════════════════════
+   POLICY SELECTION UI
+═══════════════════════════════════════════════ */
+function selectPolicy(type) {
+    const data = POLICY_DATA[type];
+    if (!data) return;
+    activeData = data;
+
+    // Buttons
+    ['health','term','vehicle'].forEach(t => {
+        document.getElementById('btn-' + t).className =
+            'rf-sel-btn' + (t === type ? ' ' + data.selClass : '');
+    });
+
+    // Canvas label
+    document.getElementById('rfCanvasTitle').textContent = data.label;
+
+    // Point light colour
+    ptLight.color.setHex(data.colorInt);
+
+    // Rebuild 3D
+    clearScene();
+    buildNodes(data.steps, data.colorInt, data.colorHex);
+
+    // Render Tips instead of steps grid
+    const grid = document.getElementById('rfTipsGrid');
+    grid.innerHTML = data.tips.map((t, i) => `
+        <div class="rf-tip-card">
+            <div class="rf-tip-icon"><i class="fa-solid fa-lightbulb"></i></div>
+            <div class="rf-tip-body">
+                <h4>${t.title}</h4>
+                <p>${t.desc}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Init
+resizeRenderer();
+animate();
+// Auto-load health on page load
+window.addEventListener('DOMContentLoaded', () => selectPolicy('health'));
+</script>
+
+{% endblock %}
