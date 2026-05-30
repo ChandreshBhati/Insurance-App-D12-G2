@@ -176,6 +176,13 @@ def renewal_flowchart():
     return render_template("renewal_flowchart.html")
 
 
+# ── IRDAI INFOGRAPHIC PAGE ────────────────────────────────────
+@main.route("/irdai-infographic")
+@login_required
+def irdai_infographic():
+    return render_template("irdai_infographic.html")
+
+
 # ═══════════════════════════════════════════════════════════════
 # JSON API ENDPOINTS
 # ═══════════════════════════════════════════════════════════════

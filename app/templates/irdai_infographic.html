@@ -1,0 +1,578 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="policy-page">
+
+    <!-- ── TAB / DROPDOWN SELECTOR ── -->
+    <div class="view-selector-wrapper">
+        <label for="info-view-select"><i class="fa-solid fa-layer-group"></i> Select Infographic View:</label>
+        <div class="custom-select-wrap">
+            <select id="info-view-select" onchange="switchView(this.value)">
+                <option value="irdai">IRDAI info</option>
+                <option value="consumer">Consumer affairs INFO</option>
+            </select>
+            <i class="fa-solid fa-chevron-down select-arrow"></i>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         VIEW 1: IRDAI INFO
+         ========================================== -->
+    <div id="view-irdai" class="info-view active-view">
+        
+        <!-- PAGE HERO -->
+        <div class="policy-hero irdai-hero">
+            <div class="policy-hero-inner">
+                <div class="policy-hero-icon" style="background: var(--bg-cream); color: var(--rust);">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <div>
+                    <div class="policy-tag" style="background: var(--bg-cream); color: var(--rust); border-color: #f97316;">Regulatory Body</div>
+                    <h1>IRDAI Guidelines & Framework</h1>
+                    <p>Understanding the Insurance Regulatory and Development Authority of India framework that protects policyholders and governs insurers.</p>
+                </div>
+            </div>
+            <div class="policy-hero-blob irdai-blob"></div>
+        </div>
+
+        <!-- BANCASSURANCE & REGISTRATION REGS -->
+        <div class="section-header" style="margin-top: 4rem;">
+            <h2>Corporate Governance & Licensing</h2>
+            <p>Definitions and rules from IRDAI Registration (2000) & Bancassurance (2012) Regulations</p>
+        </div>
+        <div class="info-grid">
+            <div class="info-card" style="border-top: 4px solid var(--teal);">
+                <div class="info-card-header">
+                    <div class="info-card-icon" style="background: #ccfbf1; color: var(--teal);"><i class="fa-solid fa-building-columns"></i></div>
+                    <div>
+                        <div class="info-card-label">Bancassurance (2012)</div>
+                        <h3>MCEV & Amortization</h3>
+                    </div>
+                </div>
+                <p style="font-size: 0.95rem; color: var(--text-body); margin-top: 1rem;">
+                    <strong>Market Consistent Embedded Value (MCEV)</strong> is calculated per Institute of Actuaries methods. The <em>Period of Amortization</em> allows insurers to amortize the difference between MCEV and the purchase value of equity.
+                </p>
+            </div>
+            
+            <div class="info-card" style="border-top: 4px solid var(--navy);">
+                <div class="info-card-header">
+                    <div class="info-card-icon" style="background: #eef0ff; color: var(--navy);"><i class="fa-solid fa-passport"></i></div>
+                    <div>
+                        <div class="info-card-label">Registration (2000)</div>
+                        <h3>Indian Promoters</h3>
+                    </div>
+                </div>
+                <p style="font-size: 0.95rem; color: var(--text-body); margin-top: 1rem;">
+                    An "Indian Promoter" must be a non-subsidiary company, a core investment company (CIC), a cooperative society, or an LLP, ensuring strong domestic capitalization as per the 8th Amendment.
+                </p>
+            </div>
+        </div>
+
+        <!-- EXISTING INFO CARDS GRID -->
+        <div class="section-header" style="margin-top: 4rem;">
+            <h2>Policyholder Rights & Consumer Rules</h2>
+        </div>
+        <div class="info-grid">
+            <div class="info-card" style="border-top: 4px solid var(--rust);">
+                <div class="info-card-header">
+                    <div class="info-card-icon" style="background: #ffedd5; color: var(--rust);">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div>
+                        <div class="info-card-label">Section 1</div>
+                        <h3>Free-Look Period</h3>
+                    </div>
+                </div>
+                <p style="font-size: 0.95rem; color: var(--text-body); margin-top: 1rem;">
+                    Policyholders have a <strong>15 to 30-day</strong> "free-look" window after receiving the policy document to review terms and cancel for a refund if unsatisfied.
+                </p>
+            </div>
+
+            <div class="info-card" style="border-top: 4px solid var(--teal);">
+                <div class="info-card-header">
+                    <div class="info-card-icon" style="background: #ccfbf1; color: var(--teal);">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <div>
+                        <div class="info-card-label">Section 2</div>
+                        <h3>Claim Settlement Timeline</h3>
+                    </div>
+                </div>
+                <p style="font-size: 0.95rem; color: var(--text-body); margin-top: 1rem;">
+                    Insurers must settle or reject a claim within <strong>30 days</strong> of receiving all required documents. Delays attract penal interest.
+                </p>
+            </div>
+
+            <div class="info-card" style="border-top: 4px solid var(--sage-dk);">
+                <div class="info-card-header">
+                    <div class="info-card-icon" style="background: var(--bg-sage-lt); color: var(--sage-dk);">
+                        <i class="fa-solid fa-file-shield"></i>
+                    </div>
+                    <div>
+                        <div class="info-card-label">Section 3</div>
+                        <h3>Standardized Exclusions</h3>
+                    </div>
+                </div>
+                <p style="font-size: 0.95rem; color: var(--text-body); margin-top: 1rem;">
+                    IRDAI standardized exclusions. Insurers cannot deny claims for telemedicine, modern treatments (e.g., robotic surgery), or mental illnesses.
+                </p>
+            </div>
+
+            <div class="info-card" style="border-top: 4px solid var(--navy);">
+                <div class="info-card-header">
+                    <div class="info-card-icon" style="background: #eef0ff; color: var(--navy);">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <div>
+                        <div class="info-card-label">Section 4</div>
+                        <h3>Grievance Redressal</h3>
+                    </div>
+                </div>
+                <p style="font-size: 0.95rem; color: var(--text-body); margin-top: 1rem;">
+                    The Bima Bharosa portal allows online complaints. Insurers must acknowledge within 3 days and resolve within 15 days.
+                </p>
+            </div>
+        </div>
+
+        <!-- INFOGRAPHIC SECTION -->
+        <div class="section-header" style="margin-top: 4rem;">
+            <h2>How IRDAI Protects You</h2>
+            <p>A visual representation of the regulatory safety net</p>
+        </div>
+        <div class="irdai-visual-wrapper">
+            <div class="irdai-node center-node">
+                <i class="fa-solid fa-landmark"></i>
+                <span>IRDAI</span>
+            </div>
+            <div class="irdai-node sub-node" style="top: 10%; left: 20%;">
+                <i class="fa-solid fa-file-contract"></i>
+                <span>Policy Guidelines</span>
+            </div>
+            <div class="irdai-node sub-node" style="top: 10%; right: 20%;">
+                <i class="fa-solid fa-coins"></i>
+                <span>Premium Norms</span>
+            </div>
+            <div class="irdai-node sub-node" style="bottom: 10%; left: 20%;">
+                <i class="fa-solid fa-handshake-angle"></i>
+                <span>Consumer Protection</span>
+            </div>
+            <div class="irdai-node sub-node" style="bottom: 10%; right: 20%;">
+                <i class="fa-solid fa-gavel"></i>
+                <span>Dispute Resolution</span>
+            </div>
+            <!-- Connecting Lines (CSS based) -->
+            <svg class="irdai-lines" width="100%" height="100%">
+                <line x1="50%" y1="50%" x2="20%" y2="10%" />
+                <line x1="50%" y1="50%" x2="80%" y2="10%" />
+                <line x1="50%" y1="50%" x2="20%" y2="90%" />
+                <line x1="50%" y1="50%" x2="80%" y2="90%" />
+            </svg>
+        </div>
+
+        <!-- 2026 REGULATORY UPDATES & IND AS -->
+        <div class="section-header" style="margin-top: 5rem;">
+            <h2>2026 Regulatory Outlook & Ind AS Implementation</h2>
+            <p>Key updates extracted from IRDAI Ind AS Circular and Global 2026 Outlook</p>
+        </div>
+        <div class="info-grid" style="margin-bottom: 3rem;">
+            <div class="info-card" style="border-top: 4px solid var(--navy);">
+                <div class="info-card-header">
+                    <div class="info-card-icon" style="background: #eef0ff; color: var(--navy);"><i class="fa-solid fa-robot"></i></div>
+                    <div>
+                        <div class="info-card-label">Focus Area 1</div>
+                        <h3>AI & Data Governance</h3>
+                    </div>
+                </div>
+                <p style="font-size: 0.95rem; color: var(--text-body); margin-top: 1rem;">
+                    Regulators are prioritizing the formalization of Artificial Intelligence (AI) and data governance frameworks. This mitigates bias in automated underwriting and claims processing.
+                </p>
+            </div>
+            <div class="info-card" style="border-top: 4px solid var(--sage-dk);">
+                <div class="info-card-header">
+                    <div class="info-card-icon" style="background: var(--bg-sage-lt); color: var(--sage-dk);"><i class="fa-solid fa-leaf"></i></div>
+                    <div>
+                        <div class="info-card-label">Focus Area 2</div>
+                        <h3>Climate Resilience</h3>
+                    </div>
+                </div>
+                <p style="font-size: 0.95rem; color: var(--text-body); margin-top: 1rem;">
+                    Increased regulatory emphasis on catastrophe preparedness. Insurers must update solvency requirements to close coverage gaps for climate-related risks.
+                </p>
+            </div>
+        </div>
+
+        <!-- Ind AS Circular Comparison Table -->
+        <div class="policy-table-section" style="padding: 0;">
+            <div class="table-wrapper">
+                <div style="padding: 1.5rem 2rem; border-bottom: 1.5px solid var(--border); background: var(--bg-cream);">
+                    <h3 style="font-family: var(--font-head); color: var(--navy); margin-bottom: 0.5rem;">Indian Accounting Standards (Ind AS) Transition</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-body);">Effective 1st April 2026, mandated by the IRDAI Actuarial, Finance and Investment Functions of Insurers Regulations, 2024.</p>
+                </div>
+                <table class="policy-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fa-solid fa-list-check"></i> Parameter</th>
+                            <th>Current System (Pre-2026)</th>
+                            <th>Ind AS Framework (Post April 2026)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Primary Standard</strong></td>
+                            <td>Indian GAAP</td>
+                            <td>Ind AS (Aligned with global IFRS standards)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Financial Reporting</strong></td>
+                            <td>Standardized reporting as per old schedules</td>
+                            <td>Must comply with <strong>Schedule - IIA</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Parallel Reporting</strong></td>
+                            <td>Single framework reporting</td>
+                            <td><strong>Dual reporting</strong> required for two years</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         VIEW 2: CONSUMER AFFAIRS INFO
+         ========================================== -->
+    <div id="view-consumer" class="info-view" style="display: none;">
+        
+        <div class="policy-hero consumer-hero">
+            <div class="policy-hero-inner">
+                <div class="policy-hero-icon" style="background: #eef0ff; color: #3b4fd8;">
+                    <i class="fa-solid fa-users-viewfinder"></i>
+                </div>
+                <div>
+                    <div class="policy-tag" style="background: #eef0ff; color: #3b4fd8; border-color: #3b4fd8;">Consumer Protection</div>
+                    <h1>Consumer Affairs Booklet 2019-20</h1>
+                    <p>Insights on grievances, claim handling, mis-selling, and regulatory responses like Aarogya Sanjeevani to the COVID-19 pandemic.</p>
+                </div>
+            </div>
+            <div class="policy-hero-blob consumer-blob"></div>
+        </div>
+
+        <!-- PANDEMIC RESPONSE & STANDARD PRODUCTS -->
+        <div class="section-header" style="margin-top: 4rem;">
+            <h2>Crisis Management & Standardization</h2>
+        </div>
+        <div class="info-grid">
+            <div class="info-card" style="border-top: 4px solid #3b4fd8;">
+                <div class="info-card-header">
+                    <div class="info-card-icon" style="background: #eef0ff; color: #3b4fd8;"><i class="fa-solid fa-virus-covid"></i></div>
+                    <div>
+                        <div class="info-card-label">Covid-19 Response</div>
+                        <h3>Essential Service & Mandates</h3>
+                    </div>
+                </div>
+                <p style="font-size: 0.95rem; color: var(--text-body); margin-top: 1rem;">
+                    During the pandemic, insurance was deemed an "essential service". IRDAI mandated that Covid-19 must be covered under all indemnity-based health insurance and set a strict 2-hour time limit to authorize cashless claims.
+                </p>
+            </div>
+            
+            <div class="info-card" style="border-top: 4px solid var(--sage-dk);">
+                <div class="info-card-header">
+                    <div class="info-card-icon" style="background: var(--bg-sage-lt); color: var(--sage-dk);"><i class="fa-solid fa-shield-virus"></i></div>
+                    <div>
+                        <div class="info-card-label">Standard Products</div>
+                        <h3>Aarogya Sanjeevani</h3>
+                    </div>
+                </div>
+                <p style="font-size: 0.95rem; color: var(--text-body); margin-top: 1rem;">
+                    To address the uninsured, IRDAI designed "Aarogya Sanjeevani" (a standard health policy) and specific products like "Corona Kavach" and "Corona Rakshak" to offer straightforward protection against health crises.
+                </p>
+            </div>
+        </div>
+
+        <!-- GRIEVANCE & MIS-SELLING VISUAL STATS -->
+        <div class="section-header" style="margin-top: 4rem;">
+            <h2>Grievance Redressal & Statistics</h2>
+            <p>Industry data from Life & General Insurance Sectors</p>
+        </div>
+        
+        <div class="stats-visual-container">
+            <!-- Stat Block 1 -->
+            <div class="stat-block">
+                <h4><i class="fa-solid fa-phone-slash" style="color:var(--rust);"></i> Mis-Selling & Spurious Calls</h4>
+                <p>A major focus of the Consumer Affairs Department is combating spurious calls and mis-selling in the Life Insurance sector. Frequent awareness campaigns warn against fake callers promising bonuses.</p>
+                
+                <div class="bar-chart">
+                    <div class="bar-item">
+                        <span class="bar-label">Mis-Selling Complaints</span>
+                        <div class="bar-track"><div class="bar-fill" style="width: 65%; background: var(--rust);"></div></div>
+                        <span class="bar-value">High</span>
+                    </div>
+                    <div class="bar-item">
+                        <span class="bar-label">Claim Delays</span>
+                        <div class="bar-track"><div class="bar-fill" style="width: 35%; background: var(--teal);"></div></div>
+                        <span class="bar-value">Moderate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stat Block 2 -->
+            <div class="stat-block">
+                <h4><i class="fa-solid fa-scale-unbalanced" style="color:#3b4fd8;"></i> Insurance Ombudsman</h4>
+                <p>The Ombudsman resolves disputes efficiently. Grievances reported here primarily involve claim repudiation, partial settlement, or delay in payment by Life and General Insurers.</p>
+                
+                <div class="circle-stats">
+                    <div class="circle-item">
+                        <div class="circle" style="border-color: #3b4fd8;"><span>98%</span></div>
+                        <span>Resolution Rate</span>
+                    </div>
+                    <div class="circle-item">
+                        <div class="circle" style="border-color: var(--sage-dk);"><span><2h</span></div>
+                        <span>Cashless Turnaround</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="policy-page-cta" style="margin-top: 4rem;">
+        <a href="{{ url_for('main.home') }}" class="ghost-btn">
+            <i class="fa fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+</div>
+
+<script>
+    function switchView(viewId) {
+        document.getElementById('view-irdai').style.display = 'none';
+        document.getElementById('view-consumer').style.display = 'none';
+        
+        document.getElementById('view-' + viewId).style.display = 'block';
+        
+        // simple animation trigger
+        const activeView = document.getElementById('view-' + viewId);
+        activeView.style.opacity = 0;
+        setTimeout(() => {
+            activeView.style.transition = "opacity 0.4s ease";
+            activeView.style.opacity = 1;
+        }, 50);
+    }
+</script>
+
+<style>
+/* View Selector Dropdown */
+.view-selector-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0 3rem;
+    padding: 1.5rem;
+    background: var(--bg-white);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+
+.view-selector-wrapper label {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 1.1rem;
+}
+
+.custom-select-wrap {
+    position: relative;
+    width: 280px;
+}
+
+.custom-select-wrap select {
+    width: 100%;
+    appearance: none;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    padding: 0.8rem 1.2rem;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--navy);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.custom-select-wrap select:focus {
+    outline: none;
+    border-color: var(--sage-dk);
+    box-shadow: 0 0 0 4px var(--bg-sage-lt);
+}
+
+.select-arrow {
+    position: absolute;
+    right: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-muted);
+}
+
+/* Specific Heroes */
+.irdai-hero {
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+    border: 1px solid #fed7aa;
+}
+.irdai-blob {
+    background: linear-gradient(135deg, #fed7aa 0%, #fdbf74 100%);
+    opacity: 0.3;
+}
+
+.consumer-hero {
+    background: linear-gradient(135deg, #f5f7ff 0%, #eef0ff 100%);
+    border: 1px solid #c7ccf5;
+}
+.consumer-blob {
+    background: linear-gradient(135deg, #c7ccf5 0%, #a5aeea 100%);
+    opacity: 0.3;
+}
+
+/* Consumer Stats Container */
+.stats-visual-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.stat-block {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-block h4 {
+    font-family: var(--font-head);
+    font-size: 1.4rem;
+    color: var(--navy);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stat-block p {
+    font-size: 0.95rem;
+    color: var(--text-body);
+    margin-bottom: 2rem;
+}
+
+/* CSS Bar Chart */
+.bar-chart { display: flex; flex-direction: column; gap: 1rem; }
+.bar-item { display: flex; align-items: center; gap: 1rem; }
+.bar-label { width: 130px; font-weight: 600; font-size: 0.85rem; color: var(--navy); }
+.bar-track { flex: 1; height: 10px; background: var(--bg); border-radius: 10px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease; }
+.bar-value { width: 70px; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-align: right; }
+
+/* CSS Circle Stats */
+.circle-stats { display: flex; justify-content: space-around; }
+.circle-item { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.circle {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    border: 6px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-white);
+    box-shadow: var(--shadow-sm);
+}
+.circle span { font-weight: 800; font-size: 1.2rem; color: var(--navy); }
+.circle-item > span { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+
+/* SVG Graph */
+.irdai-visual-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 450px;
+    margin: 0 auto;
+    background: var(--bg-white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.irdai-lines {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.irdai-lines line {
+    stroke: var(--border2);
+    stroke-width: 2;
+    stroke-dasharray: 6 6;
+    animation: dash 20s linear infinite;
+}
+@keyframes dash { to { stroke-dashoffset: -100; } }
+
+.irdai-node {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--bg-white);
+    border-radius: 50%;
+    box-shadow: var(--shadow);
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+}
+.irdai-node:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: var(--shadow-lg);
+}
+.irdai-node span {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--navy);
+    text-align: center;
+    width: max-content;
+}
+
+.center-node {
+    top: 50%; left: 50%;
+    width: 120px; height: 120px;
+    border: 4px solid var(--rust);
+    background: #fff7ed;
+}
+.center-node i { font-size: 2.5rem; color: var(--rust); }
+
+.sub-node {
+    width: 90px; height: 90px;
+    border: 2px solid var(--sage-dk);
+}
+.sub-node i { font-size: 1.8rem; color: var(--sage-dk); }
+
+@media (max-width: 768px) {
+    .irdai-visual-wrapper { height: 600px; }
+    .irdai-lines line:nth-child(1) { x1: 50%; y1: 50%; x2: 20%; y2: 15%; }
+    .irdai-lines line:nth-child(2) { x1: 50%; y1: 50%; x2: 80%; y2: 15%; }
+    .irdai-lines line:nth-child(3) { x1: 50%; y1: 50%; x2: 20%; y2: 85%; }
+    .irdai-lines line:nth-child(4) { x1: 50%; y1: 50%; x2: 80%; y2: 85%; }
+    
+    .sub-node:nth-child(2) { top: 15%; left: 20%; }
+    .sub-node:nth-child(3) { top: 15%; right: 20%; }
+    .sub-node:nth-child(4) { bottom: 15%; left: 20%; }
+    .sub-node:nth-child(5) { bottom: 15%; right: 20%; }
+    
+    .stats-visual-container { grid-template-columns: 1fr; }
+}
+</style>
+
+{% endblock %}

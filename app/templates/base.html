@@ -56,6 +56,12 @@
                 <i class="fa-solid fa-diagram-project" style="font-size:0.78rem;margin-right:0.3rem;"></i>Renewal Flow
             </a>
 
+            <!-- IRDAI Infographic pill button (rust/orange) -->
+            <a href="{{ url_for('main.irdai_infographic') }}" class="nav-irdai-btn">
+                <i class="fa-solid fa-scale-balanced" style="font-size:0.78rem;margin-right:0.3rem;"></i>INFOGRAPHIC
+            </a>
+
+
         {% else %}
 
             <a href="{{ url_for('auth.login') }}"    class="nav-login-btn">Sign In</a>
@@ -99,6 +105,9 @@
                 </a>
                 <a href="{{ url_for('main.renewal_flowchart') }}" class="dropdown-item">
                     <i class="fa-solid fa-diagram-project"></i> Renewal Flow
+                </a>
+                <a href="{{ url_for('main.irdai_infographic') }}" class="dropdown-item">
+                    <i class="fa-solid fa-scale-balanced"></i> INFOGRAPHIC
                 </a>
 
                 <div class="dropdown-divider"></div>
@@ -235,6 +244,26 @@ document.addEventListener('click', function(e) {
     background: #99f6e4 !important;
     border-color: #0f766e !important;
     color: #0f766e !important;
+}
+
+/* IRDAI Info pill — rust/orange */
+.nav-irdai-btn {
+    font-weight: 600 !important;
+    color: #9c2b0e !important;
+    background: #ffedd5 !important;
+    border: 1px solid #fdba74 !important;
+    border-radius: 100px !important;
+    padding: 0.38rem 1rem !important;
+    font-size: 0.88rem !important;
+    text-decoration: none;
+    transition: all 0.2s ease !important;
+    display: inline-flex;
+    align-items: center;
+}
+.nav-irdai-btn:hover {
+    background: #fed7aa !important;
+    border-color: #f97316 !important;
+    color: #9c2b0e !important;
 }
 
 /* Flash close button reset */
